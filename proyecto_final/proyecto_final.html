@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.550">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Fernan Serverich">
+<meta name="author" content="Pedro Joaquin Perilla Vargas">
+
+<title>Plan de Proyecto Final: Evaluación Geomática Multi-Escala del Potencial Fotovoltaico en Colombia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="proyecto_final_files/libs/clipboard/clipboard.min.js"></script>
+<script src="proyecto_final_files/libs/quarto-html/quarto.js"></script>
+<script src="proyecto_final_files/libs/quarto-html/popper.min.js"></script>
+<script src="proyecto_final_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="proyecto_final_files/libs/quarto-html/anchor.min.js"></script>
+<link href="proyecto_final_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="proyecto_final_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="proyecto_final_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="proyecto_final_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="proyecto_final_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<style>html{ scroll-behavior: smooth; }</style>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contenido del Proyecto</h2>
+   
+  <ul>
+  <li><a href="#título-del-proyecto" id="toc-título-del-proyecto" class="nav-link active" data-scroll-target="#título-del-proyecto"><span class="header-section-number">1</span> Título del Proyecto</a></li>
+  <li><a href="#introducción-y-justificación" id="toc-introducción-y-justificación" class="nav-link" data-scroll-target="#introducción-y-justificación"><span class="header-section-number">2</span> Introducción y Justificación</a></li>
+  <li><a href="#estado-del-arte-revisión-bibliográfica-preliminar" id="toc-estado-del-arte-revisión-bibliográfica-preliminar" class="nav-link" data-scroll-target="#estado-del-arte-revisión-bibliográfica-preliminar"><span class="header-section-number">3</span> Estado del Arte / Revisión Bibliográfica Preliminar</a></li>
+  <li><a href="#objetivos" id="toc-objetivos" class="nav-link" data-scroll-target="#objetivos"><span class="header-section-number">4</span> Objetivos</a>
+  <ul class="collapse">
+  <li><a href="#objetivo-general" id="toc-objetivo-general" class="nav-link" data-scroll-target="#objetivo-general"><span class="header-section-number">4.1</span> Objetivo General</a></li>
+  <li><a href="#objetivos-específicos" id="toc-objetivos-específicos" class="nav-link" data-scroll-target="#objetivos-específicos"><span class="header-section-number">4.2</span> Objetivos Específicos</a></li>
+  </ul></li>
+  <li><a href="#área-de-estudio" id="toc-área-de-estudio" class="nav-link" data-scroll-target="#área-de-estudio"><span class="header-section-number">5</span> Área de Estudio</a></li>
+  <li><a href="#fuentes-de-datos" id="toc-fuentes-de-datos" class="nav-link" data-scroll-target="#fuentes-de-datos"><span class="header-section-number">6</span> Fuentes de Datos</a></li>
+  <li><a href="#metodología-propuesta" id="toc-metodología-propuesta" class="nav-link" data-scroll-target="#metodología-propuesta"><span class="header-section-number">7</span> Metodología Propuesta</a></li>
+  <li><a href="#consideraciones-y-recomendaciones-futuras" id="toc-consideraciones-y-recomendaciones-futuras" class="nav-link" data-scroll-target="#consideraciones-y-recomendaciones-futuras"><span class="header-section-number">8</span> Consideraciones y Recomendaciones Futuras</a></li>
+  <li><a href="#referencias-preliminares" id="toc-referencias-preliminares" class="nav-link" data-scroll-target="#referencias-preliminares"><span class="header-section-number">9</span> Referencias Preliminares</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Otros formatos</h2><ul><li><a href="proyecto_final.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Plan de Proyecto Final: Evaluación Geomática Multi-Escala del Potencial Fotovoltaico en Colombia</h1>
+<p class="subtitle lead">Integración de Earth Engine para Áreas Abiertas y Solar API para Techos Urbanos</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Autores/as</div>
+    <div class="quarto-title-meta-contents">
+             <p>Fernan Serverich </p>
+             <p>Pedro Joaquin Perilla Vargas </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Fecha de publicación</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">6 de abril de 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div style="page-break-after: always;"></div>
+<section id="título-del-proyecto" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="título-del-proyecto"><span class="header-section-number">1</span> Título del Proyecto</h2>
+<p><strong>Evaluación Multi-Escala del Potencial Fotovoltaico en Colombia mediante Geoprocesamiento en la Nube</strong></p>
+</section>
+<section id="introducción-y-justificación" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="introducción-y-justificación"><span class="header-section-number">2</span> Introducción y Justificación</h2>
+<p>La transición energética en Colombia exige identificar con precisión las zonas óptimas para la generación solar. Espacialmente, la evaluación de este recurso presenta un desafío a dos escalas: instalaciones de gran envergadura en áreas descubiertas (granjas solares) y generación distribuida en techos urbanos. Según <span class="citation" data-cites="upme2015atlas">Unidad de Planeación Minero Energética (UPME) (<a href="#ref-upme2015atlas" role="doc-biblioref">2015</a>)</span>, Colombia cuenta con una radiación promedio privilegiada de 4.5 kWh/m²/día, pero este dato macro no contempla restricciones físicas a nivel micro, como pendientes críticas que inviabilizan la obra civil o el sombreado arquitectónico.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Innovación Tecnológica del Proyecto">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Innovación Tecnológica del Proyecto
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Este proyecto supera los mapas estáticos unidimensionales mediante la automatización de flujos de trabajo en la nube. Al integrar <strong>Earth Engine</strong> (escala macro) y <strong>Google Solar API</strong> (escala micro), se entrega una herramienta integral de soporte a la decisión (SDSS) para la planificación territorial <span class="citation" data-cites="gorelick2017google">(<a href="#ref-gorelick2017google" role="doc-biblioref">Gorelick et&nbsp;al. 2017</a>)</span>.</p>
+</div>
+</div>
+</section>
+<section id="estado-del-arte-revisión-bibliográfica-preliminar" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="estado-del-arte-revisión-bibliográfica-preliminar"><span class="header-section-number">3</span> Estado del Arte / Revisión Bibliográfica Preliminar</h2>
+<p>La Evaluación Multicriterio en Sistemas de Información Geográfica (GIS-MCDA) es el estándar metodológico para la localización de infraestructuras energéticas. <span class="citation" data-cites="malczewski2006gis">Malczewski (<a href="#ref-malczewski2006gis" role="doc-biblioref">2006</a>)</span> destaca que el uso conjunto de SIG y el Proceso de Jerarquía Analítica (AHP) permite estructurar decisiones complejas ponderando variables heterogéneas.</p>
+<p>En el paradigma de procesamiento, la estimación del recurso ha migrado hacia infraestructuras <em>Cloud</em>. Plataformas como Google Earth Engine (GEE) permiten procesar series temporales climáticas globales como ERA5-Land casi en tiempo real <span class="citation" data-cites="munoz2021era5">(<a href="#ref-munoz2021era5" role="doc-biblioref">Muñoz-Sabater et&nbsp;al. 2021</a>)</span>. A escala urbana, el análisis de potencial distribuido dependía de costosos vuelos LiDAR propios; hoy en día, las API RESTful permiten extraer métricas financieras y energéticas considerando la geometría de sombras a nivel de parcela (LOD-2).</p>
+<div class="callout callout-style-default callout-important callout-titled" title="El factor de la Estabilidad del Terreno">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+El factor de la Estabilidad del Terreno
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Autores como <span class="citation" data-cites="polo2020solar">Polo, Martı́n-Pomares, y Sanfilippo (<a href="#ref-polo2020solar" role="doc-biblioref">2020</a>)</span> enfatizan la necesidad de incluir índices geomorfométricos. <strong>Un terreno puede tener alta radiación, pero si presenta susceptibilidad a movimientos en masa o pendientes críticas, el proyecto es inviable desde la ingeniería civil.</strong> Este modelo integra dichas restricciones como máscaras booleanas duras.</p>
+</div>
+</div>
+</section>
+<section id="objetivos" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="objetivos"><span class="header-section-number">4</span> Objetivos</h2>
+<section id="objetivo-general" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="objetivo-general"><span class="header-section-number">4.1</span> Objetivo General</h3>
+<p>Desarrollar un modelo espacial automatizado a multi-escala para la estimación del potencial fotovoltaico en Colombia, integrando análisis multicriterio para áreas rurales/descubiertas y modelado de alta resolución para estructuras urbanas.</p>
+</section>
+<section id="objetivos-específicos" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="objetivos-específicos"><span class="header-section-number">4.2</span> Objetivos Específicos</h3>
+<ol type="1">
+<li>Identificar macro-zonas óptimas para granjas solares mediante la integración de variables climáticas (radiación ERA5), geomorfométricas (pendiente SRTM) y de cobertura terrestre (MapBiomas) en un entorno de <em>Cloud Computing</em>.</li>
+<li>Aplicar técnicas de autocorrelación espacial sobre el modelo regional para delimitar clústeres contiguos viables para infraestructura energética.</li>
+<li>Estimar el potencial de generación solar distribuida en una zona urbana piloto mediante la ingesta de datos arquitectónicos y de insolación consumiendo la <em>Google Solar API</em>.</li>
+</ol>
+</section>
+</section>
+<section id="área-de-estudio" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="área-de-estudio"><span class="header-section-number">5</span> Área de Estudio</h2>
+<p>El proyecto se desarrolla bajo un esquema de anidamiento espacial:</p>
+<ul>
+<li>🌎 <strong>Escala Regional (Macro):</strong> Territorio continental de Colombia. Enfoque en áreas rurales y periurbanas.</li>
+<li>🏙️ <strong>Escala Urbana (Micro):</strong> Polígono piloto dentro de Bogotá D.C. (ej. localidad de Teusaquillo), caracterizado por heterogeneidad en las cubiertas y alta disponibilidad de datos de la Solar API.</li>
+</ul>
+</section>
+<section id="fuentes-de-datos" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="fuentes-de-datos"><span class="header-section-number">6</span> Fuentes de Datos</h2>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">Fuente de Datos</th>
+<th style="text-align: left;">Resolución / Tipo</th>
+<th style="text-align: left;">Uso en el Modelo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Radiación (GHI)</td>
+<td style="text-align: left;">ECMWF / ERA5-Land</td>
+<td style="text-align: left;">9 km (Raster)</td>
+<td style="text-align: left;">Criterio de maximización de energía.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Elevación</td>
+<td style="text-align: left;">USGS / SRTMGL1_003</td>
+<td style="text-align: left;">30 m (Raster)</td>
+<td style="text-align: left;">Derivación de pendientes y restricciones geotécnicas.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Uso del Suelo</td>
+<td style="text-align: left;">MapBiomas Colombia</td>
+<td style="text-align: left;">30 m (Raster)</td>
+<td style="text-align: left;">Selección de pastos/mosaicos; exclusión de reservas.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Métrica 3D Urbano</td>
+<td style="text-align: left;">Google Solar API</td>
+<td style="text-align: left;">LOD-2 (JSON)</td>
+<td style="text-align: left;">Extracción de área útil y potencial (kWh/año) por techo.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="metodología-propuesta" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="metodología-propuesta"><span class="header-section-number">7</span> Metodología Propuesta</h2>
+<p>El proyecto se desarrollará en <strong>Python</strong> empleando librerías espaciales (<code>ee</code>, <code>geemap</code>, <code>geopandas</code>, <code>requests</code>). El flujo de trabajo se divide en dos fases principales:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">🌐 Fase 1: Análisis Regional (GEE)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">🏢 Fase 2: Análisis Urbano (API RESTful)</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>Se compilarán las series temporales de GHI normalizándolas de 0 a 1 mediante reductores espaciales. La aptitud continua se calculará con un modelo de superposición ponderada:</p>
+<p><span class="math display">\[Aptitud_i = \sum_{j=1}^{n} (v_{ij} \cdot w_j) \times \prod_{k=1}^{m} c_{ik}\]</span></p>
+<p><em>(Donde <span class="math inline">\(v_{ij}\)</span> es el valor normalizado, <span class="math inline">\(w_j\)</span> el peso del criterio, y <span class="math inline">\(c_{ik}\)</span> las máscaras booleanas de exclusión).</em> Finalmente, se calculará el <strong>Índice Local de Moran (LISA)</strong> para identificar clústeres contiguos (High-High).</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Se iterarán coordenadas de la zona piloto enviando peticiones HTTP a la Google Solar API. Los archivos JSON devueltos se estructurarán en un <em>GeoDataFrame</em> para su análisis estadístico y visualización en mapas web interactivos mediante <code>folium</code>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="consideraciones-y-recomendaciones-futuras" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="consideraciones-y-recomendaciones-futuras"><span class="header-section-number">8</span> Consideraciones y Recomendaciones Futuras</h2>
+<div class="callout callout-style-default callout-warning callout-titled" title="Validación de Datos Climáticos">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Validación de Datos Climáticos
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Debido a las limitaciones de tiempo del ciclo académico, el modelo asume la precisión de los datos de reanálisis (ERA5-Land). Para fases posteriores o estudios de factibilidad constructiva, se recomienda realizar una <strong>calibración espacial</strong> frente a registros históricos de piranómetros terrestres operados por el IDEAM, calculando el Error Cuadrático Medio Espacial (RMSE).</p>
+</div>
+</div>
+</section>
+<section id="referencias-preliminares" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="referencias-preliminares"><span class="header-section-number">9</span> Referencias Preliminares</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-gorelick2017google" class="csl-entry" role="listitem">
+Gorelick, Noel, Matt Hancher, Maciek Dixon, Simon Ilyushchenko, David Thau, y Rebecca Moore. 2017. <span>«Google Earth Engine: Planetary-scale geospatial analysis for everyone»</span>. <em>Remote sensing of Environment</em> 202: 18-27.
+</div>
+<div id="ref-malczewski2006gis" class="csl-entry" role="listitem">
+Malczewski, Jacek. 2006. <span>«GIS-based multicriteria decision analysis: a survey of the literature»</span>. <em>International journal of geographical information science</em> 20 (7): 703-26.
+</div>
+<div id="ref-munoz2021era5" class="csl-entry" role="listitem">
+Muñoz-Sabater, Joaquı́n, Emanuel Dutra, Anna Agustı́-Panareda, Clément Albergel, Gabriele Arduini, Gianpaolo Balsamo, Souhail Boussetta, et&nbsp;al. 2021. <span>«ERA5-Land: A state-of-the-art global reanalysis dataset for land applications»</span>. <em>Earth System Science Data</em> 13 (9): 4349-83.
+</div>
+<div id="ref-polo2020solar" class="csl-entry" role="listitem">
+Polo, Jesús, Luis Martı́n-Pomares, y Antonio Sanfilippo. 2020. <span>«Solar resources and power potential mapping»</span>. En <em>Solar Resources Mapping</em>, 1-15. Springer.
+</div>
+<div id="ref-upme2015atlas" class="csl-entry" role="listitem">
+Unidad de Planeación Minero Energética (UPME). 2015. <em>Atlas de radiaci<span>ó</span>n solar, ultravioleta y ozono de Colombia</em>. Ministerio de Minas y Energ<span>ı́</span>a, Bogot<span>á</span>.
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+<script src="proyecto_final_files/libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

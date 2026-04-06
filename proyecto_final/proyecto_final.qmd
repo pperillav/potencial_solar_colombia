@@ -1,0 +1,103 @@
+---
+title: "Plan de Proyecto Final: Evaluación Geomática Multi-Escala del Potencial Fotovoltaico en Colombia"
+subtitle: "Integración de Earth Engine para Áreas Abiertas y Solar API para Techos Urbanos"
+author: 
+  - name: "Fernan Serverich"
+  - name: "Pedro Joaquin Perilla Vargas"
+date: today
+lang: es
+number-sections: true
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-title: "Contenido del Proyecto"
+    theme: cosmo
+    code-fold: true
+    smooth-scroll: true
+  pdf:
+    toc: true
+    number-sections: true
+    colorlinks: true
+    geometry: "left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm"
+bibliography: referencias.bib
+---
+{{< pagebreak >}}
+
+## Título del Proyecto
+
+**Evaluación Multi-Escala del Potencial Fotovoltaico en Colombia mediante Geoprocesamiento en la Nube**
+
+## Introducción y Justificación
+
+La transición energética en Colombia exige identificar con precisión las zonas óptimas para la generación solar. Espacialmente, la evaluación de este recurso presenta un desafío a dos escalas: instalaciones de gran envergadura en áreas descubiertas (granjas solares) y generación distribuida en techos urbanos. Según @upme2015atlas, Colombia cuenta con una radiación promedio privilegiada de 4.5 kWh/m²/día, pero este dato macro no contempla restricciones físicas a nivel micro, como pendientes críticas que inviabilizan la obra civil o el sombreado arquitectónico.
+
+::: {.callout-tip title="Innovación Tecnológica del Proyecto"}
+Este proyecto supera los mapas estáticos unidimensionales mediante la automatización de flujos de trabajo en la nube. Al integrar **Earth Engine** (escala macro) y **Google Solar API** (escala micro), se entrega una herramienta integral de soporte a la decisión (SDSS) para la planificación territorial [@gorelick2017google].
+:::
+
+## Estado del Arte / Revisión Bibliográfica Preliminar
+
+La Evaluación Multicriterio en Sistemas de Información Geográfica (GIS-MCDA) es el estándar metodológico para la localización de infraestructuras energéticas. @malczewski2006gis destaca que el uso conjunto de SIG y el Proceso de Jerarquía Analítica (AHP) permite estructurar decisiones complejas ponderando variables heterogéneas. 
+
+En el paradigma de procesamiento, la estimación del recurso ha migrado hacia infraestructuras *Cloud*. Plataformas como Google Earth Engine (GEE) permiten procesar series temporales climáticas globales como ERA5-Land casi en tiempo real [@munoz2021era5]. A escala urbana, el análisis de potencial distribuido dependía de costosos vuelos LiDAR propios; hoy en día, las API RESTful permiten extraer métricas financieras y energéticas considerando la geometría de sombras a nivel de parcela (LOD-2).
+
+::: {.callout-important title="El factor de la Estabilidad del Terreno"}
+Autores como @polo2020solar enfatizan la necesidad de incluir índices geomorfométricos. **Un terreno puede tener alta radiación, pero si presenta susceptibilidad a movimientos en masa o pendientes críticas, el proyecto es inviable desde la ingeniería civil.** Este modelo integra dichas restricciones como máscaras booleanas duras.
+:::
+
+## Objetivos
+
+### Objetivo General
+Desarrollar un modelo espacial automatizado a multi-escala para la estimación del potencial fotovoltaico en Colombia, integrando análisis multicriterio para áreas rurales/descubiertas y modelado de alta resolución para estructuras urbanas.
+
+### Objetivos Específicos
+1. Identificar macro-zonas óptimas para granjas solares mediante la integración de variables climáticas (radiación ERA5), geomorfométricas (pendiente SRTM) y de cobertura terrestre (MapBiomas) en un entorno de *Cloud Computing*.
+2. Aplicar técnicas de autocorrelación espacial sobre el modelo regional para delimitar clústeres contiguos viables para infraestructura energética.
+3. Estimar el potencial de generación solar distribuida en una zona urbana piloto mediante la ingesta de datos arquitectónicos y de insolación consumiendo la *Google Solar API*.
+
+## Área de Estudio
+
+El proyecto se desarrolla bajo un esquema de anidamiento espacial:
+
+* 🌎 **Escala Regional (Macro):** Territorio continental de Colombia. Enfoque en áreas rurales y periurbanas.
+* 🏙️ **Escala Urbana (Micro):** Polígono piloto dentro de Bogotá D.C. (ej. localidad de Teusaquillo), caracterizado por heterogeneidad en las cubiertas y alta disponibilidad de datos de la Solar API.
+
+## Fuentes de Datos
+
+| Variable | Fuente de Datos | Resolución / Tipo | Uso en el Modelo |
+|:---|:---|:---|:---|
+| Radiación (GHI) | ECMWF / ERA5-Land | 9 km (Raster) | Criterio de maximización de energía. |
+| Elevación | USGS / SRTMGL1_003 | 30 m (Raster) | Derivación de pendientes y restricciones geotécnicas. |
+| Uso del Suelo | MapBiomas Colombia | 30 m (Raster) | Selección de pastos/mosaicos; exclusión de reservas. |
+| Métrica 3D Urbano| Google Solar API | LOD-2 (JSON) | Extracción de área útil y potencial (kWh/año) por techo. |
+
+## Metodología Propuesta
+
+El proyecto se desarrollará en **Python** empleando librerías espaciales (`ee`, `geemap`, `geopandas`, `requests`). El flujo de trabajo se divide en dos fases principales:
+
+::: {.panel-tabset}
+
+### 🌐 Fase 1: Análisis Regional (GEE)
+Se compilarán las series temporales de GHI normalizándolas de 0 a 1 mediante reductores espaciales. La aptitud continua se calculará con un modelo de superposición ponderada:
+
+$$Aptitud_i = \sum_{j=1}^{n} (v_{ij} \cdot w_j) \times \prod_{k=1}^{m} c_{ik}$$
+
+*(Donde $v_{ij}$ es el valor normalizado, $w_j$ el peso del criterio, y $c_{ik}$ las máscaras booleanas de exclusión).*
+Finalmente, se calculará el **Índice Local de Moran (LISA)** para identificar clústeres contiguos (High-High).
+
+### 🏢 Fase 2: Análisis Urbano (API RESTful)
+Se iterarán coordenadas de la zona piloto enviando peticiones HTTP a la Google Solar API. Los archivos JSON devueltos se estructurarán en un *GeoDataFrame* para su análisis estadístico y visualización en mapas web interactivos mediante `folium`.
+
+:::
+
+## Consideraciones y Recomendaciones Futuras
+
+::: {.callout-warning title="Validación de Datos Climáticos"}
+Debido a las limitaciones de tiempo del ciclo académico, el modelo asume la precisión de los datos de reanálisis (ERA5-Land). Para fases posteriores o estudios de factibilidad constructiva, se recomienda realizar una **calibración espacial** frente a registros históricos de piranómetros terrestres operados por el IDEAM, calculando el Error Cuadrático Medio Espacial (RMSE).
+:::
+
+## Referencias Preliminares
+
+::: {#refs}
+:::
