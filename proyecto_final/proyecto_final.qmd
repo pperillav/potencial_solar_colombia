@@ -1,8 +1,8 @@
 ---
-title: "Plan de Proyecto Final: Evaluación Geomática Multi-Escala del Potencial Fotovoltaico en Colombia"
-subtitle: "Integración de Earth Engine para Áreas Abiertas y Solar API para Techos Urbanos"
+title: "Evaluación geomática de áreas aptas para la instalación de parques solares fotovoltaicos mediante análisis topográfico, sombreado por relieve y parámetros fijos de implantación a partir de modelos digitales de elevación"
+subtitle: "Aplicación en territorio Colombiano"
 author: 
-  - name: "Fernan Serverich"
+  - name: "Fernán José Severich Díaz"
   - name: "Pedro Joaquin Perilla Vargas"
 date: today
 lang: es
@@ -20,82 +20,200 @@ format:
     number-sections: true
     colorlinks: true
     geometry: "left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm"
-bibliography: referencias.bib
+bibliography: ref.bib
 ---
 {{< pagebreak >}}
 
 ## Título del Proyecto
 
-**Evaluación Multi-Escala del Potencial Fotovoltaico en Colombia mediante Geoprocesamiento en la Nube**
+**Evaluación geomática de áreas aptas para la instalación de parques solares fotovoltaicos mediante análisis topográfico, sombreado por relieve y parámetros fijos de implantación a partir de modelos digitales de elevación**
 
 ## Introducción y Justificación
 
-La transición energética en Colombia exige identificar con precisión las zonas óptimas para la generación solar. Espacialmente, la evaluación de este recurso presenta un desafío a dos escalas: instalaciones de gran envergadura en áreas descubiertas (granjas solares) y generación distribuida en techos urbanos. Según @upme2015atlas, Colombia cuenta con una radiación promedio privilegiada de 4.5 kWh/m²/día, pero este dato macro no contempla restricciones físicas a nivel micro, como pendientes críticas que inviabilizan la obra civil o el sombreado arquitectónico.
+La transición energética y el aumento de la participación de fuentes no convencionales de energía renovable han incrementado el interés por identificar zonas técnicamente aptas para la instalación de parques solares fotovoltaicos. Aunque Colombia presenta condiciones favorables de radiación solar a escala regional, la selección de áreas adecuadas para proyectos fotovoltaicos no puede sustentarse únicamente en mapas generales de irradiación, puesto que la viabilidad real de implantación depende de condiciones locales del terreno.
+
+En proyectos de granjas solares, la topografía juega un papel determinante. La presencia de pendientes elevadas, ondulaciones del terreno y cambios locales del relieve puede afectar tanto la factibilidad constructiva como el desempeño energético del sistema. En particular, el relieve puede generar sombras sobre los paneles en ciertas horas del día, disminuyendo la radiación incidente efectiva y, por consiguiente, la capacidad de generación de energía.
+
+Adicionalmente, los sistemas fotovoltaicos sobre terreno suelen diseñarse con estructuras de inclinación y orientación fija, de manera que la aptitud del sitio no depende solo del terreno en sí mismo, sino también de la geometría de instalación del arreglo. Variables como la altura de instalación del panel, su orientación azimutal y su inclinación fija, determinada en función de la localización geográfica del proyecto, deben integrarse al análisis para representar de forma más realista las condiciones de implantación.
+
+En este contexto, la geomática ofrece herramientas adecuadas para desarrollar un modelo espacial de apoyo a la decisión, a partir del procesamiento de modelos digitales de elevación y de la derivación de variables geomorfométricas, solares y geométricas. La presente propuesta busca desarrollar una metodología que permita identificar, dentro de un predio o zona piloto, las áreas más aptas para la instalación de un parque solar fotovoltaico de estructura fija, considerando la interacción entre relieve, geometría de montaje y exposición solar.
 
 ::: {.callout-tip title="Innovación Tecnológica del Proyecto"}
-Este proyecto supera los mapas estáticos unidimensionales mediante la automatización de flujos de trabajo en la nube. Al integrar **Earth Engine** (escala macro) y **Google Solar API** (escala micro), se entrega una herramienta integral de soporte a la decisión (SDSS) para la planificación territorial [@gorelick2017google].
+Este proyecto propone una evaluación geomática de aptitud solar que integra, en un mismo modelo, la topografía, el sombreado por relieve y la configuración fija de instalación de los paneles fotovoltaicos. Con ello, se supera la visión estática de los mapas tradicionales de potencial solar y se obtiene una aproximación más realista para la selección de áreas aptas para parques solares sobre terreno.
 :::
 
 ## Estado del Arte / Revisión Bibliográfica Preliminar
 
-La Evaluación Multicriterio en Sistemas de Información Geográfica (GIS-MCDA) es el estándar metodológico para la localización de infraestructuras energéticas. @malczewski2006gis destaca que el uso conjunto de SIG y el Proceso de Jerarquía Analítica (AHP) permite estructurar decisiones complejas ponderando variables heterogéneas. 
+### Antecedentes internacionales
 
-En el paradigma de procesamiento, la estimación del recurso ha migrado hacia infraestructuras *Cloud*. Plataformas como Google Earth Engine (GEE) permiten procesar series temporales climáticas globales como ERA5-Land casi en tiempo real [@munoz2021era5]. A escala urbana, el análisis de potencial distribuido dependía de costosos vuelos LiDAR propios; hoy en día, las API RESTful permiten extraer métricas financieras y energéticas considerando la geometría de sombras a nivel de parcela (LOD-2).
+La evaluación del potencial fotovoltaico y la selección de sitios para proyectos solares ha evolucionado desde enfoques basados únicamente en mapas de radiación hacia metodologías de evaluación multicriterio apoyadas en Sistemas de Información Geográfica (SIG). En este contexto, la Evaluación Multicriterio en Sistemas de Información Geográfica (GIS-MCDA) se ha consolidado como uno de los enfoques metodológicos más utilizados para la localización de infraestructuras energéticas. Malczewski [@malczewski2006gis] destaca que la integración entre SIG y métodos de análisis multicriterio, como el Proceso de Jerarquía Analítica (AHP), permite estructurar decisiones complejas a partir de la ponderación de variables heterogéneas.
 
-::: {.callout-important title="El factor de la Estabilidad del Terreno"}
-Autores como @polo2020solar enfatizan la necesidad de incluir índices geomorfométricos. **Un terreno puede tener alta radiación, pero si presenta susceptibilidad a movimientos en masa o pendientes críticas, el proyecto es inviable desde la ingeniería civil.** Este modelo integra dichas restricciones como máscaras booleanas duras.
+De manera complementaria, diversos estudios han señalado que la combinación de SIG con metodologías multicriterio constituye una herramienta robusta para identificar áreas aptas para proyectos fotovoltaicos, al integrar variables como irradiación, pendiente, orientación, uso del suelo, restricciones ambientales y cercanía a infraestructura [@choi2019gis]. En estos enfoques, suele emplearse una lógica de dos niveles: primero, la exclusión de áreas inviables mediante restricciones duras; y segundo, la ponderación de criterios continuos para obtener índices de aptitud territorial.
+
+En el paradigma reciente de procesamiento geoespacial, la estimación del recurso ha migrado además hacia infraestructuras *Cloud*. Plataformas como Google Earth Engine (GEE) permiten procesar series temporales climáticas globales y grandes volúmenes de información espacial de forma eficiente, como ocurre con productos de reanálisis tipo ERA5-Land [@munoz2021era5]. Esta evolución ha fortalecido las capacidades de automatización y reproducibilidad en estudios de aptitud energética.
+
+No obstante, aunque la topografía aparece de manera recurrente en la literatura, muchos estudios la representan de forma simplificada, limitándose a variables como pendiente y orientación del terreno. Son menos frecuentes los trabajos que incorporan de manera explícita el sombreado topográfico y su efecto sobre superficies fotovoltaicas reales. En este sentido, la literatura más reciente señala la necesidad de avanzar hacia modelos que integren no solo variables geomorfométricas, sino también la geometría solar y la configuración del sistema fotovoltaico [@choi2019gis].
+
+Asimismo, herramientas de simulación como PVGIS reconocen que la orientación y el ángulo de inclinación de sistemas fijos dependen de la localización geográfica del sitio, por lo que la latitud no debe entenderse únicamente como un dato de referencia, sino como una variable fundamental para definir la geometría de implantación del arreglo [@pvgismanual].
+
+### Antecedentes nacionales
+
+En Colombia, los antecedentes sobre evaluación del potencial solar se han desarrollado principalmente a escala regional, a partir de atlas y cartografía temática orientados a identificar zonas favorables para el aprovechamiento energético. Estos productos han sido fundamentales para la planificación macro del recurso, pero no permiten por sí solos resolver la aptitud a escala de predio, donde las condiciones locales del terreno tienen un papel decisivo [@upme2015atlas].
+
+En cuanto a estudios aplicados, existen antecedentes que han empleado SIG y evaluación multicriterio para la localización de proyectos de energías renovables en el país. Olivero-Ortiz et al. [@olivero2021ahp] desarrollaron una aproximación basada en AHP y SIG para analizar la aptitud territorial de proyectos solar-eólicos en Santa Marta, incorporando variables territoriales, ambientales y de infraestructura. De manera similar, estudios más recientes en la región Caribe han aplicado metodologías multicriterio para la selección de sitios de sistemas fotovoltaicos, confirmando la utilidad de estos enfoques en el contexto colombiano [@robles2024colombian].
+
+Sin embargo, los antecedentes nacionales revisados se concentran principalmente en variables regionales como radiación, cobertura del suelo, restricciones territoriales y proximidad a infraestructura, mientras que el análisis detallado del relieve, el sombreado topográfico y la geometría fija de instalación de los paneles ha sido menos desarrollado.
+
+### Vacíos de investigación
+
+A partir de la revisión bibliográfica realizada, se identifican varios vacíos relevantes. En primer lugar, una parte importante de los estudios de aptitud fotovoltaica se desarrolla a escala regional, por lo que sus resultados son útiles para procesos de priorización territorial, pero no para definir con precisión qué zonas dentro de un predio son realmente aptas para la instalación de paneles solares [@choi2019gis].
+
+En segundo lugar, aunque la topografía se incluye frecuentemente como criterio de evaluación, en muchos casos se representa solo mediante pendiente y orientación del terreno, sin modelar de manera explícita el sombreado generado por el relieve. Esta omisión puede resultar especialmente importante en terrenos ondulados o con variaciones topográficas locales, donde la exposición solar efectiva puede diferir sustancialmente de la esperada [@polo2020solar].
+
+En tercer lugar, son escasos los trabajos que integran en un mismo flujo metodológico las características del terreno con los parámetros geométricos de implantación de un arreglo fotovoltaico fijo, tales como la altura de instalación, el azimut y el ángulo de inclinación. En consecuencia, aún existe espacio para desarrollar metodologías que aproximen el análisis geomático a las condiciones reales de diseño e implantación de parques solares sobre terreno [@pvgismanual].
+
+::: {.callout-important}
+## El factor de la estabilidad y geometría del terreno
+
+Autores como Polo, Martín-Pomares y Sanfilippo [@polo2020solar] enfatizan la necesidad de incluir índices geomorfométricos dentro de la evaluación del potencial solar. Un terreno puede presentar condiciones favorables de radiación, pero si exhibe pendientes críticas, relieve ondulado o susceptibilidad a procesos de inestabilidad, el proyecto puede resultar inviable desde la perspectiva de la ingeniería. En este sentido, variables como la pendiente, la orientación del relieve y el sombreado topográfico deben ser consideradas como restricciones o criterios determinantes dentro del modelo de aptitud.
 :::
+
+### Aporte del proyecto
+
+En este contexto, el presente proyecto propone una metodología geomática orientada a la identificación de áreas aptas para la instalación de parques solares fotovoltaicos de estructura fija a escala de predio. Su principal aporte consiste en integrar, dentro de un mismo modelo espacial de aptitud, variables derivadas de modelos digitales de elevación —como pendiente, orientación y sombreado topográfico— junto con parámetros geométricos de diseño del arreglo fotovoltaico, tales como altura de instalación, orientación azimutal e inclinación fija definida según la localización geográfica del sitio.
+
+De esta manera, el proyecto busca superar enfoques más generales centrados exclusivamente en mapas regionales de radiación o en análisis topográficos simplificados, trasladando la evaluación hacia una escala local de implantación más cercana a las condiciones reales de diseño y selección de sitio. Se espera así aportar una herramienta de apoyo a la decisión más robusta para la preselección técnica de áreas potenciales para parques solares sobre terreno.
+
+## Pregunta de Investigación
+¿Cómo puede un modelo geomático basado en modelos digitales de elevación identificar las zonas más aptas dentro de un predio para la instalación de un parque solar fotovoltaico de estructura fija, considerando la pendiente, el sombreado topográfico y los parámetros geométricos de implantación de los paneles?
+
+## Hipotesis de Trabajo
+Las áreas del terreno con menores pendientes, menor exposición al sombreado topográfico y mayor compatibilidad con la orientación e inclinación fija de los paneles presentan una mayor aptitud para la implantación de parques solares fotovoltaicos.
 
 ## Objetivos
 
 ### Objetivo General
-Desarrollar un modelo espacial automatizado a multi-escala para la estimación del potencial fotovoltaico en Colombia, integrando análisis multicriterio para áreas rurales/descubiertas y modelado de alta resolución para estructuras urbanas.
+Desarrollar un modelo geomático de aptitud territorial para identificar las zonas más favorables para la instalación de un parque solar fotovoltaico de estructura fija, integrando variables topográficas derivadas de un DEM/DTM y parámetros geométricos de diseño del arreglo fotovoltaico.
 
 ### Objetivos Específicos
-1. Identificar macro-zonas óptimas para granjas solares mediante la integración de variables climáticas (radiación ERA5), geomorfométricas (pendiente SRTM) y de cobertura terrestre (MapBiomas) en un entorno de *Cloud Computing*.
-2. Aplicar técnicas de autocorrelación espacial sobre el modelo regional para delimitar clústeres contiguos viables para infraestructura energética.
-3. Estimar el potencial de generación solar distribuida en una zona urbana piloto mediante la ingesta de datos arquitectónicos y de insolación consumiendo la *Google Solar API*.
+1. Obtener y preprocesar un modelo digital de elevación del área de estudio, delimitando el predio o zona piloto de análisis.
+2. Derivar variables geomorfométricas relevantes para la instalación de paneles solares, tales como pendiente, orientación del terreno y relieve local.
+3. Definir los parámetros geométricos de implantación del arreglo fotovoltaico, incluyendo altura de instalación, orientación y ángulo de inclinación, en función de la ubicación geográfica del sitio.
+4. Evaluar el efecto del sombreado topográfico sobre un arreglo fotovoltaico de estructura fija en diferentes momentos representativos del día o del año.
+5. Integrar las variables topográficas y geométricas en un modelo de evaluación multicriterio para clasificar el terreno según niveles de aptitud.
+6. Generar un mapa final de aptitud y cuantificar las áreas potencialmente utilizables para el desarrollo de un parque solar fotovoltaico.
 
-## Área de Estudio
+## Área de estudio
 
-El proyecto se desarrolla bajo un esquema de anidamiento espacial:
+El proyecto se plantea a partir de un caso de interés real asociado a la evaluación preliminar de áreas potenciales para la instalación de un parque solar fotovoltaico. En este sentido, se cuenta con información topográfica correspondiente a una zona ubicada en el área de influencia de Cerromatoso, actualmente considerada por la empresa dentro de sus análisis para la posible implantación de un parque solar en una superficie disponible aproximada de 600 hectáreas, localizada entre las coordenadas `7°54'51.9"N, 75°33'54.0"W` y `7°53'33.6"N, 75°32'27.2"W`.
 
-* 🌎 **Escala Regional (Macro):** Territorio continental de Colombia. Enfoque en áreas rurales y periurbanas.
-* 🏙️ **Escala Urbana (Micro):** Polígono piloto dentro de Bogotá D.C. (ej. localidad de Teusaquillo), caracterizado por heterogeneidad en las cubiertas y alta disponibilidad de datos de la Solar API.
+No obstante, dado que al momento de formulación de esta propuesta aún se encuentra en trámite la autorización para el uso académico de dicha información, el proyecto no se restringirá exclusivamente a este caso. En consecuencia, y teniendo en cuenta que el propósito principal de la propuesta es poner a prueba el funcionamiento metodológico del modelo de aptitud, se plantea como **zona piloto de aplicación** un área alternativa con condiciones topográficas más exigentes, localizada entre los municipios de **Vegachí y Remedios**, en el departamento de **Antioquia**.
 
-## Fuentes de Datos
+La selección de esta zona piloto responde a dos criterios principales. En primer lugar, se trata de un sector con presencia de pendientes pronunciadas y relieve irregular, lo que permite evaluar de manera más rigurosa la capacidad del modelo para identificar restricciones derivadas de la topografía, tales como inclinaciones elevadas y posibles efectos de sombreado por relieve. En segundo lugar, esta condición ofrece un escenario adecuado para validar la sensibilidad del procedimiento propuesto frente a terrenos complejos, donde la selección de áreas aptas para la instalación de paneles solares resulta más desafiante.
 
-| Variable | Fuente de Datos | Resolución / Tipo | Uso en el Modelo |
-|:---|:---|:---|:---|
-| Radiación (GHI) | ECMWF / ERA5-Land | 9 km (Raster) | Criterio de maximización de energía. |
-| Elevación | USGS / SRTMGL1_003 | 30 m (Raster) | Derivación de pendientes y restricciones geotécnicas. |
-| Uso del Suelo | MapBiomas Colombia | 30 m (Raster) | Selección de pastos/mosaicos; exclusión de reservas. |
-| Métrica 3D Urbano| Google Solar API | LOD-2 (JSON) | Extracción de área útil y potencial (kWh/año) por techo. |
+En este sentido, el área de estudio del proyecto tendrá un carácter **metodológico y demostrativo**, orientado a comprobar la aplicabilidad del modelo geomático propuesto en una zona piloto representativa. En caso de obtenerse la autorización correspondiente, la metodología podrá ser posteriormente transferida y aplicada al área de interés asociada a Cerromatoso, como caso de uso real para la evaluación de aptitud territorial de un parque solar fotovoltaico.
 
-## Metodología Propuesta
+## Fuentes de datos
 
-El proyecto se desarrollará en **Python** empleando librerías espaciales (`ee`, `geemap`, `geopandas`, `requests`). El flujo de trabajo se divide en dos fases principales:
+Para el desarrollo del proyecto se emplearán insumos geoespaciales y datos de localización que permitan caracterizar el terreno, definir la geometría de implantación del sistema fotovoltaico y construir el modelo de aptitud espacial. La selección final de las fuentes dependerá de la disponibilidad de información para el área de estudio; sin embargo, de manera preliminar se contemplan las siguientes:
 
-::: {.panel-tabset}
+| Variable | Fuente potencial | Tipo de dato | Uso en el modelo |
+|---|---|---|---|
+| Modelo digital de elevación (DEM/DTM) | SRTM, ALOS, levantamiento topográfico, dron, LiDAR o información topográfica disponible | Raster | Base para derivar pendiente, orientación del terreno y sombreado topográfico |
+| Límite del predio o área piloto | Shapefile, GeoJSON, KML o plano georreferenciado | Vector | Delimitación espacial del área de análisis |
+| Coordenadas geográficas del sitio | Información catastral, cartográfica o levantamiento GNSS | Punto / atributo | Definición de latitud y longitud para establecer parámetros solares y geométricos del arreglo |
+| Cobertura del suelo | Capa temática opcional | Raster o vector | Identificación y exclusión de áreas no aptas, si aplica |
+| Restricciones físicas o normativas | Información del proyecto, cartografía temática o capas institucionales | Vector | Exclusión de zonas con limitaciones ambientales, legales o de uso |
 
-### 🌐 Fase 1: Análisis Regional (GEE)
-Se compilarán las series temporales de GHI normalizándolas de 0 a 1 mediante reductores espaciales. La aptitud continua se calculará con un modelo de superposición ponderada:
+En todos los casos, se procurará que la información empleada tenga consistencia en cuanto a sistema de referencia espacial, extensión, resolución y precisión, de manera que sea apta para su integración dentro del flujo de análisis geomático.
 
-$$Aptitud_i = \sum_{j=1}^{n} (v_{ij} \cdot w_j) \times \prod_{k=1}^{m} c_{ik}$$
+## Metodología propuesta
 
-*(Donde $v_{ij}$ es el valor normalizado, $w_j$ el peso del criterio, y $c_{ik}$ las máscaras booleanas de exclusión).*
-Finalmente, se calculará el **Índice Local de Moran (LISA)** para identificar clústeres contiguos (High-High).
+La metodología se desarrollará mediante herramientas de análisis geoespacial, preferiblemente en `Python`, `QGIS` o una combinación de ambos, utilizando algoritmos para procesamiento raster, análisis del relieve y modelación solar. El flujo metodológico se estructura en las siguientes fases:
 
-### 🏢 Fase 2: Análisis Urbano (API RESTful)
-Se iterarán coordenadas de la zona piloto enviando peticiones HTTP a la Google Solar API. Los archivos JSON devueltos se estructurarán en un *GeoDataFrame* para su análisis estadístico y visualización en mapas web interactivos mediante `folium`.
+### Fase 1. Adquisición y preprocesamiento de datos
 
-:::
+En esta fase se recopilará el modelo digital de elevación del área de estudio y se realizará su preparación para el análisis. Las actividades principales incluyen:
 
-## Consideraciones y Recomendaciones Futuras
+- revisión del sistema de referencia espacial;
+- recorte del DEM/DTM al polígono del predio o zona piloto;
+- verificación de la resolución espacial;
+- corrección y homogeneización del raster base.
 
-::: {.callout-warning title="Validación de Datos Climáticos"}
-Debido a las limitaciones de tiempo del ciclo académico, el modelo asume la precisión de los datos de reanálisis (ERA5-Land). Para fases posteriores o estudios de factibilidad constructiva, se recomienda realizar una **calibración espacial** frente a registros históricos de piranómetros terrestres operados por el IDEAM, calculando el Error Cuadrático Medio Espacial (RMSE).
-:::
+El objetivo de esta fase es disponer de un insumo topográfico consistente y adecuado para la derivación posterior de variables geomorfométricas.
+
+### Fase 2. Derivación de variables geomorfométricas
+
+A partir del DEM/DTM se generarán variables topográficas relevantes para la implantación del parque solar, entre ellas:
+
+- pendiente del terreno;
+- orientación del terreno;
+- sombreado del relieve (*hillshade*);
+- y, de forma opcional, índices complementarios como curvatura, rugosidad o relieve local.
+
+Estas variables permitirán caracterizar la condición física del terreno y reconocer sectores potencialmente favorables o desfavorables desde el punto de vista geométrico y constructivo.
+
+### Fase 3. Definición de parámetros de implantación del arreglo fotovoltaico
+
+Esta fase constituye un componente central de la propuesta. Antes de evaluar la aptitud del terreno, se definirán los parámetros fijos de instalación del sistema fotovoltaico, entre ellos:
+
+- altura de instalación del panel sobre el terreno;
+- azimut u orientación fija del panel;
+- ángulo de inclinación fija.
+
+Como criterio inicial de diseño, se asumirá una orientación del panel hacia el ecuador y una inclinación aproximada asociada a la latitud del sitio, reconociendo que esta constituye una aproximación inicial para sistemas fijos y que puede ajustarse en estudios de mayor detalle. Así, para sitios ubicados al norte del ecuador, la orientación de referencia será hacia el sur; y para sitios ubicados al sur del ecuador, la orientación de referencia será hacia el norte.
+
+Esta fase permite incorporar al análisis no solo la topografía del terreno, sino también la geometría real de montaje del arreglo fotovoltaico.
+
+### Fase 4. Análisis de sombreado topográfico sobre el arreglo fijo
+
+Con base en el relieve del terreno y en los parámetros geométricos definidos, se evaluará el efecto del sombreado topográfico en distintos momentos representativos del día o del año. Para ello se podrán seleccionar:
+
+- horas representativas del día, por ejemplo 8:00, 10:00, 12:00, 14:00 y 16:00;
+- y fechas representativas, como los solsticios y el equinoccio.
+
+El propósito de esta fase es identificar sectores del terreno donde el relieve circundante puede generar pérdidas de exposición solar sobre un panel inclinado fijo. Como resultado, se construirá un índice espacial que represente la frecuencia o intensidad del sombreado topográfico, el cual podrá interpretarse como una medida de exposición solar efectiva del arreglo.
+
+### Fase 5. Modelo multicriterio de aptitud
+
+Posteriormente, se integrarán las variables derivadas en un modelo de evaluación multicriterio. Se propone combinar:
+
+- criterios continuos o ponderados, como pendiente, orientación y nivel de sombreado topográfico;
+- y criterios restrictivos o máscaras booleanas para excluir zonas no viables.
+
+De manera preliminar, el modelo podrá estructurarse como una superposición ponderada, en la que cada variable aporte a un índice final de aptitud. A su vez, se podrán establecer umbrales de exclusión, por ejemplo:
+
+- pendientes superiores a un valor máximo admisible;
+- zonas con elevado sombreado topográfico;
+- áreas físicamente no disponibles o con restricciones de uso.
+
+El resultado será un mapa de aptitud espacial clasificado, por ejemplo, en las categorías:
+
+- alta aptitud;
+- media aptitud;
+- baja aptitud;
+- no apta.
+
+### Fase 6. Generación de resultados y análisis final
+
+Finalmente, se elaborarán los productos cartográficos y estadísticos del proyecto, entre ellos:
+
+- mapa de pendiente;
+- mapa de orientación del terreno;
+- mapa de sombreado topográfico;
+- mapa final de aptitud para parque solar;
+- cálculo de áreas aptas por categoría;
+- y análisis interpretativo de los resultados.
+
+De forma complementaria, podrá estimarse el área potencialmente utilizable para la implantación del sistema, como insumo preliminar para procesos de selección de sitio y evaluación de factibilidad territorial.
+
+## Alcance y limitaciones
+
+El proyecto se enfocará en el análisis del sombreado generado por el relieve topográfico, por lo que sus resultados constituirán una aproximación preliminar a la aptitud territorial para la instalación de parques solares fotovoltaicos. En caso de emplearse un `DEM` en lugar de un `DSM`, el modelo no representará de manera explícita obstáculos superficiales como árboles, edificaciones u otros elementos emergentes que también pueden incidir en la disponibilidad real de radiación sobre los paneles.
+
+De igual manera, la precisión de los resultados estará condicionada por la resolución espacial, la calidad y el nivel de detalle del modelo digital de elevación disponible. En consecuencia, la capacidad del análisis para representar adecuadamente variaciones locales del terreno dependerá directamente de las características del insumo topográfico empleado.
+
+Por tanto, el proyecto debe entenderse como una herramienta de apoyo para la preselección de áreas potencialmente aptas, y no como un sustituto de estudios detallados de ingeniería, diseño civil, diseño eléctrico o simulación energética avanzada requeridos en etapas posteriores de formulación y factibilidad de un parque solar fotovoltaico.
 
 ## Referencias Preliminares
 
