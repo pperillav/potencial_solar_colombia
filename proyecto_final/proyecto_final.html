@@ -89,7 +89,7 @@ div.csl-indent {
   <li><a href="#metodología-propuesta" id="toc-metodología-propuesta" class="nav-link" data-scroll-target="#metodología-propuesta"><span class="header-section-number">9</span> Metodología propuesta</a>
   <ul class="collapse">
   <li><a href="#fase-1.-adquisición-y-preprocesamiento-de-datos" id="toc-fase-1.-adquisición-y-preprocesamiento-de-datos" class="nav-link" data-scroll-target="#fase-1.-adquisición-y-preprocesamiento-de-datos"><span class="header-section-number">9.1</span> Fase 1. Adquisición y preprocesamiento de datos</a></li>
-  <li><a href="#fase-2.-derivación-de-variables-geomorfométricas" id="toc-fase-2.-derivación-de-variables-geomorfométricas" class="nav-link" data-scroll-target="#fase-2.-derivación-de-variables-geomorfométricas"><span class="header-section-number">9.2</span> Fase 2. Derivación de variables geomorfométricas</a></li>
+  <li><a href="#fase-2.-derivación-de-variables-geomorfométricas-y-extracción-climática" id="toc-fase-2.-derivación-de-variables-geomorfométricas-y-extracción-climática" class="nav-link" data-scroll-target="#fase-2.-derivación-de-variables-geomorfométricas-y-extracción-climática"><span class="header-section-number">9.2</span> Fase 2. Derivación de variables geomorfométricas y extracción climática</a></li>
   <li><a href="#fase-3.-definición-de-parámetros-de-implantación-del-arreglo-fotovoltaico" id="toc-fase-3.-definición-de-parámetros-de-implantación-del-arreglo-fotovoltaico" class="nav-link" data-scroll-target="#fase-3.-definición-de-parámetros-de-implantación-del-arreglo-fotovoltaico"><span class="header-section-number">9.3</span> Fase 3. Definición de parámetros de implantación del arreglo fotovoltaico</a></li>
   <li><a href="#fase-4.-análisis-de-sombreado-topográfico-sobre-el-arreglo-fijo" id="toc-fase-4.-análisis-de-sombreado-topográfico-sobre-el-arreglo-fijo" class="nav-link" data-scroll-target="#fase-4.-análisis-de-sombreado-topográfico-sobre-el-arreglo-fijo"><span class="header-section-number">9.4</span> Fase 4. Análisis de sombreado topográfico sobre el arreglo fijo</a></li>
   <li><a href="#fase-5.-modelo-multicriterio-de-aptitud" id="toc-fase-5.-modelo-multicriterio-de-aptitud" class="nav-link" data-scroll-target="#fase-5.-modelo-multicriterio-de-aptitud"><span class="header-section-number">9.5</span> Fase 5. Modelo multicriterio de aptitud</a></li>
@@ -166,7 +166,7 @@ Innovación Tecnológica del Proyecto
 <h3 data-number="3.1" class="anchored" data-anchor-id="antecedentes-internacionales"><span class="header-section-number">3.1</span> Antecedentes internacionales</h3>
 <p>La evaluación del potencial fotovoltaico y la selección de sitios para proyectos solares ha evolucionado desde enfoques basados únicamente en mapas de radiación hacia metodologías de evaluación multicriterio apoyadas en Sistemas de Información Geográfica (SIG). En este contexto, la Evaluación Multicriterio en Sistemas de Información Geográfica (GIS-MCDA) se ha consolidado como uno de los enfoques metodológicos más utilizados para la localización de infraestructuras energéticas. Malczewski <span class="citation" data-cites="malczewski2006gis">(<a href="#ref-malczewski2006gis" role="doc-biblioref">Malczewski 2006</a>)</span> destaca que la integración entre SIG y métodos de análisis multicriterio, como el Proceso de Jerarquía Analítica (AHP), permite estructurar decisiones complejas a partir de la ponderación de variables heterogéneas.</p>
 <p>De manera complementaria, diversos estudios han señalado que la combinación de SIG con metodologías multicriterio constituye una herramienta robusta para identificar áreas aptas para proyectos fotovoltaicos, al integrar variables como irradiación, pendiente, orientación, uso del suelo, restricciones ambientales y cercanía a infraestructura <span class="citation" data-cites="choi2019gis">(<a href="#ref-choi2019gis" role="doc-biblioref">Choi, Suh, y Kim 2019</a>)</span>. En estos enfoques, suele emplearse una lógica de dos niveles: primero, la exclusión de áreas inviables mediante restricciones duras; y segundo, la ponderación de criterios continuos para obtener índices de aptitud territorial.</p>
-<p>En el paradigma reciente de procesamiento geoespacial, la estimación del recurso ha migrado además hacia infraestructuras <em>Cloud</em>. Plataformas como Google Earth Engine (GEE) permiten procesar series temporales climáticas globales y grandes volúmenes de información espacial de forma eficiente, como ocurre con productos de reanálisis tipo ERA5-Land <span class="citation" data-cites="munoz2021era5">(<a href="#ref-munoz2021era5" role="doc-biblioref">Muñoz-Sabater et&nbsp;al. 2021</a>)</span>. Esta evolución ha fortalecido las capacidades de automatización y reproducibilidad en estudios de aptitud energética.</p>
+<p>En el paradigma reciente de procesamiento geoespacial, la estimación del recurso ha migrado además hacia infraestructuras <em>Cloud</em>. Plataformas como Google Earth Engine (GEE) permiten procesar series temporales climáticas globales y grandes volúmenes de información espacial de forma eficiente, como ocurre con productos de reanálisis tipo ERA5-Land <span class="citation" data-cites="munoz2021era5">(<a href="#ref-munoz2021era5" role="doc-biblioref">Muñoz-Sabater et&nbsp;al. 2021</a>)</span>. Un claro ejemplo de esta evolución es el trabajo de Haz et al. <span class="citation" data-cites="haz2025mapping">(<a href="#ref-haz2025mapping" role="doc-biblioref">Haz et&nbsp;al. 2025</a>)</span>, quienes demostraron la eficacia de GEE para integrar modelos de radiación solar (GHI, DNI, DHI) con clasificaciones de uso del suelo derivadas de imágenes Sentinel-2, permitiendo identificar zonas de alto potencial energético que minimizan el impacto ecológico al priorizar el desarrollo en áreas abiertas. Esta evolución ha fortalecido las capacidades de automatización y reproducibilidad en estudios de aptitud energética.</p>
 <p>No obstante, aunque la topografía aparece de manera recurrente en la literatura, muchos estudios la representan de forma simplificada, limitándose a variables como pendiente y orientación del terreno. Son menos frecuentes los trabajos que incorporan de manera explícita el sombreado topográfico y su efecto sobre superficies fotovoltaicas reales. En este sentido, la literatura más reciente señala la necesidad de avanzar hacia modelos que integren no solo variables geomorfométricas, sino también la geometría solar y la configuración del sistema fotovoltaico <span class="citation" data-cites="choi2019gis">(<a href="#ref-choi2019gis" role="doc-biblioref">Choi, Suh, y Kim 2019</a>)</span>.</p>
 <p>Asimismo, herramientas de simulación como PVGIS reconocen que la orientación y el ángulo de inclinación de sistemas fijos dependen de la localización geográfica del sitio, por lo que la latitud no debe entenderse únicamente como un dato de referencia, sino como una variable fundamental para definir la geometría de implantación del arreglo <span class="citation" data-cites="pvgismanual">(<a href="#ref-pvgismanual" role="doc-biblioref">European Commission, Joint Research Centre 2024</a>)</span>.</p>
 </section>
@@ -197,32 +197,33 @@ El factor de la estabilidad y geometría del terreno
 </section>
 <section id="aporte-del-proyecto" class="level3" data-number="3.4">
 <h3 data-number="3.4" class="anchored" data-anchor-id="aporte-del-proyecto"><span class="header-section-number">3.4</span> Aporte del proyecto</h3>
-<p>En este contexto, el presente proyecto propone una metodología geomática orientada a la identificación de áreas aptas para la instalación de parques solares fotovoltaicos de estructura fija a escala de predio. Su principal aporte consiste en integrar, dentro de un mismo modelo espacial de aptitud, variables derivadas de modelos digitales de elevación —como pendiente, orientación y sombreado topográfico— junto con parámetros geométricos de diseño del arreglo fotovoltaico, tales como altura de instalación, orientación azimutal e inclinación fija definida según la localización geográfica del sitio.</p>
+<p>En este contexto, el presente proyecto propone una metodología geomática orientada a la identificación de áreas aptas para la instalación de parques solares fotovoltaicos de estructura fija a escala de predio. Su principal aporte consiste en integrar, dentro de un mismo modelo espacial de aptitud, variables derivadas de modelos digitales de elevación —como pendiente, orientación y sombreado topográfico— junto con parámetros geométricos de diseño del arreglo fotovoltaico. De manera complementaria, este análisis topográfico de alto detalle se cruzará con datos base de potencial solar (Radiación Global Horizontal - GHI), garantizando que las zonas seleccionadas no solo sean viables topográficamente, sino que cuenten con la energía incidente necesaria para garantizar la viabilidad del proyecto.</p>
 <p>De esta manera, el proyecto busca superar enfoques más generales centrados exclusivamente en mapas regionales de radiación o en análisis topográficos simplificados, trasladando la evaluación hacia una escala local de implantación más cercana a las condiciones reales de diseño y selección de sitio. Se espera así aportar una herramienta de apoyo a la decisión más robusta para la preselección técnica de áreas potenciales para parques solares sobre terreno.</p>
 </section>
 </section>
 <section id="pregunta-de-investigación" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="pregunta-de-investigación"><span class="header-section-number">4</span> Pregunta de Investigación</h2>
-<p>¿Cómo puede un modelo geomático basado en modelos digitales de elevación identificar las zonas más aptas dentro de un predio para la instalación de un parque solar fotovoltaico de estructura fija, considerando la pendiente, el sombreado topográfico y los parámetros geométricos de implantación de los paneles?</p>
+<p>¿Cómo puede un modelo geomático basado en modelos digitales de elevación y datos base de radiación identificar las zonas más aptas dentro de un predio para la instalación de un parque solar fotovoltaico de estructura fija, considerando la pendiente, el sombreado topográfico y los parámetros geométricos de implantación de los paneles?</p>
 </section>
 <section id="hipotesis-de-trabajo" class="level2" data-number="5">
 <h2 data-number="5" class="anchored" data-anchor-id="hipotesis-de-trabajo"><span class="header-section-number">5</span> Hipotesis de Trabajo</h2>
-<p>Las áreas del terreno con menores pendientes, menor exposición al sombreado topográfico y mayor compatibilidad con la orientación e inclinación fija de los paneles presentan una mayor aptitud para la implantación de parques solares fotovoltaicos.</p>
+<p>Las áreas del terreno con menores pendientes, menor exposición al sombreado topográfico, alta radiación solar incidente (GHI) y mayor compatibilidad con la orientación e inclinación fija de los paneles presentan una mayor aptitud para la implantación de parques solares fotovoltaicos.</p>
 </section>
 <section id="objetivos" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="objetivos"><span class="header-section-number">6</span> Objetivos</h2>
 <section id="objetivo-general" class="level3" data-number="6.1">
 <h3 data-number="6.1" class="anchored" data-anchor-id="objetivo-general"><span class="header-section-number">6.1</span> Objetivo General</h3>
-<p>Desarrollar un modelo geomático de aptitud territorial para identificar las zonas más favorables para la instalación de un parque solar fotovoltaico de estructura fija, integrando variables topográficas derivadas de un DEM/DTM y parámetros geométricos de diseño del arreglo fotovoltaico.</p>
+<p>Desarrollar un modelo geomático de aptitud territorial para identificar las zonas más favorables para la instalación de un parque solar fotovoltaico de estructura fija, integrando variables topográficas derivadas de un DEM/DTM, datos de radiación solar y parámetros geométricos de diseño del arreglo fotovoltaico.</p>
 </section>
 <section id="objetivos-específicos" class="level3" data-number="6.2">
 <h3 data-number="6.2" class="anchored" data-anchor-id="objetivos-específicos"><span class="header-section-number">6.2</span> Objetivos Específicos</h3>
 <ol type="1">
 <li>Obtener y preprocesar un modelo digital de elevación del área de estudio, delimitando el predio o zona piloto de análisis.</li>
 <li>Derivar variables geomorfométricas relevantes para la instalación de paneles solares, tales como pendiente, orientación del terreno y relieve local.</li>
+<li>Extraer e integrar variables climáticas, específicamente la Radiación Global Horizontal (GHI), a partir de bases de datos globales o nacionales, para cuantificar el recurso solar base.</li>
 <li>Definir los parámetros geométricos de implantación del arreglo fotovoltaico, incluyendo altura de instalación, orientación y ángulo de inclinación, en función de la ubicación geográfica del sitio.</li>
 <li>Evaluar el efecto del sombreado topográfico sobre un arreglo fotovoltaico de estructura fija en diferentes momentos representativos del día o del año.</li>
-<li>Integrar las variables topográficas y geométricas en un modelo de evaluación multicriterio para clasificar el terreno según niveles de aptitud.</li>
+<li>Integrar las variables topográficas, geométricas y de radiación en un modelo de evaluación multicriterio para clasificar el terreno según niveles de aptitud.</li>
 <li>Generar un mapa final de aptitud y cuantificar las áreas potencialmente utilizables para el desarrollo de un parque solar fotovoltaico.</li>
 </ol>
 </section>
@@ -260,10 +261,22 @@ El factor de la estabilidad y geometría del terreno
 <td>Base para derivar pendiente, orientación del terreno y sombreado topográfico</td>
 </tr>
 <tr class="even">
+<td>Potencial Solar (GHI)</td>
+<td>ERA5-Land (vía GEE), Global Solar Atlas o IDEAM</td>
+<td>Raster / Puntos</td>
+<td>Cuantificación del recurso energético base para ponderar la viabilidad de la zona</td>
+</tr>
+<tr class="odd">
 <td>Límite del predio o área piloto</td>
 <td>Shapefile, GeoJSON, KML o plano georreferenciado</td>
 <td>Vector</td>
 <td>Delimitación espacial del área de análisis</td>
+</tr>
+<tr class="even">
+<td>Infraestructura y conectividad</td>
+<td>Cartografía vial y eléctrica (UPME, IGAC u OpenStreetMap)</td>
+<td>Vector</td>
+<td>Análisis de proximidad (distancias euclidianas) para evaluar factibilidad logística y costos de interconexión</td>
 </tr>
 <tr class="odd">
 <td>Coordenadas geográficas del sitio</td>
@@ -289,7 +302,7 @@ El factor de la estabilidad y geometría del terreno
 </section>
 <section id="metodología-propuesta" class="level2" data-number="9">
 <h2 data-number="9" class="anchored" data-anchor-id="metodología-propuesta"><span class="header-section-number">9</span> Metodología propuesta</h2>
-<p>La metodología se desarrollará mediante herramientas de análisis geoespacial, preferiblemente en <code>Python</code>, <code>QGIS</code> o una combinación de ambos, utilizando algoritmos para procesamiento raster, análisis del relieve y modelación solar. El flujo metodológico se estructura en las siguientes fases:</p>
+<p>La metodología se desarrollará mediante herramientas de análisis geoespacial, empleando un flujo de trabajo orquestado principalmente en <code>Python</code>, y apoyado en <code>ArcGIS</code>-<code>QGIS</code> y sus complementos relevantes, para la validación visual y cartográfica. Para garantizar la reproducibilidad y el rigor técnico, se hará uso de librías especializadas tales como <code>rasterio</code> o <code>geopandas</code> para el geoprocesamiento de matrices y vectores, <code>WhiteboxTools</code> para el análisis avanzado de cuencas visuales y sombreado sobre el modelo digital de elevación, y <code>pysolar</code> para el cálculo preciso de la geometría astronómica y la posición solar. El flujo metodológico se estructura en las siguientes fases:</p>
 <section id="fase-1.-adquisición-y-preprocesamiento-de-datos" class="level3" data-number="9.1">
 <h3 data-number="9.1" class="anchored" data-anchor-id="fase-1.-adquisición-y-preprocesamiento-de-datos"><span class="header-section-number">9.1</span> Fase 1. Adquisición y preprocesamiento de datos</h3>
 <p>En esta fase se recopilará el modelo digital de elevación del área de estudio y se realizará su preparación para el análisis. Las actividades principales incluyen:</p>
@@ -301,8 +314,8 @@ El factor de la estabilidad y geometría del terreno
 </ul>
 <p>El objetivo de esta fase es disponer de un insumo topográfico consistente y adecuado para la derivación posterior de variables geomorfométricas.</p>
 </section>
-<section id="fase-2.-derivación-de-variables-geomorfométricas" class="level3" data-number="9.2">
-<h3 data-number="9.2" class="anchored" data-anchor-id="fase-2.-derivación-de-variables-geomorfométricas"><span class="header-section-number">9.2</span> Fase 2. Derivación de variables geomorfométricas</h3>
+<section id="fase-2.-derivación-de-variables-geomorfométricas-y-extracción-climática" class="level3" data-number="9.2">
+<h3 data-number="9.2" class="anchored" data-anchor-id="fase-2.-derivación-de-variables-geomorfométricas-y-extracción-climática"><span class="header-section-number">9.2</span> Fase 2. Derivación de variables geomorfométricas y extracción climática</h3>
 <p>A partir del DEM/DTM se generarán variables topográficas relevantes para la implantación del parque solar, entre ellas:</p>
 <ul>
 <li>pendiente del terreno;</li>
@@ -310,6 +323,7 @@ El factor de la estabilidad y geometría del terreno
 <li>sombreado del relieve (<em>hillshade</em>);</li>
 <li>y, de forma opcional, índices complementarios como curvatura, rugosidad o relieve local.</li>
 </ul>
+<p>En paralelo, se realizará la extracción espacial de la Radiación Global Horizontal (GHI) recortando la zona de estudio desde bases de datos macroclimáticas (ej. colección ERA5), normalizando sus valores para integrarlos algebraicamente con las variables físicas del terreno.</p>
 <p>Estas variables permitirán caracterizar la condición física del terreno y reconocer sectores potencialmente favorables o desfavorables desde el punto de vista geométrico y constructivo.</p>
 </section>
 <section id="fase-3.-definición-de-parámetros-de-implantación-del-arreglo-fotovoltaico" class="level3" data-number="9.3">
@@ -336,13 +350,13 @@ El factor de la estabilidad y geometría del terreno
 <h3 data-number="9.5" class="anchored" data-anchor-id="fase-5.-modelo-multicriterio-de-aptitud"><span class="header-section-number">9.5</span> Fase 5. Modelo multicriterio de aptitud</h3>
 <p>Posteriormente, se integrarán las variables derivadas en un modelo de evaluación multicriterio. Se propone combinar:</p>
 <ul>
-<li>criterios continuos o ponderados, como pendiente, orientación y nivel de sombreado topográfico;</li>
+<li>criterios continuos o ponderados, como potencial de radiación incidente (GHI), pendiente, orientación, nivel de sombreado topográfico y proximidad a infraestructura (distancias euclidianas a vías de acceso principales y redes de transmisión eléctrica);</li>
 <li>y criterios restrictivos o máscaras booleanas para excluir zonas no viables.</li>
 </ul>
 <p>De manera preliminar, el modelo podrá estructurarse como una superposición ponderada, en la que cada variable aporte a un índice final de aptitud. A su vez, se podrán establecer umbrales de exclusión, por ejemplo:</p>
 <ul>
 <li>pendientes superiores a un valor máximo admisible;</li>
-<li>zonas con elevado sombreado topográfico;</li>
+<li>zonas con elevado sombreado topográfico o déficit de radiación solar base;</li>
 <li>áreas físicamente no disponibles o con restricciones de uso.</li>
 </ul>
 <p>El resultado será un mapa de aptitud espacial clasificado, por ejemplo, en las categorías:</p>
@@ -359,18 +373,19 @@ El factor de la estabilidad y geometría del terreno
 <ul>
 <li>mapa de pendiente;</li>
 <li>mapa de orientación del terreno;</li>
-<li>mapa de sombreado topográfico;</li>
+<li>mapa de radiación y sombreado topográfico combinado;</li>
 <li>mapa final de aptitud para parque solar;</li>
 <li>cálculo de áreas aptas por categoría;</li>
 <li>y análisis interpretativo de los resultados.</li>
 </ul>
 <p>De forma complementaria, podrá estimarse el área potencialmente utilizable para la implantación del sistema, como insumo preliminar para procesos de selección de sitio y evaluación de factibilidad territorial.</p>
+<p><em>Análisis de Sensibilidad (Validación del Modelo):</em> Para dotar de mayor rigor científico a la evaluación, se ejecutará un análisis de sensibilidad sobre el modelo multicriterio. Este procedimiento consistirá en variar sistemáticamente los pesos asignados a las variables continuas (por ejemplo, alternando la preponderancia de la pendiente frente a la radiación o la distancia a infraestructuras) para evaluar la estabilidad de las áreas clasificadas como de “Alta Aptitud”. Las zonas que mantengan su idoneidad frente a las variaciones de los pesos se considerarán las localizaciones más robustas y confiables para la implantación del proyecto.</p>
 </section>
 </section>
 <section id="alcance-y-limitaciones" class="level2" data-number="10">
 <h2 data-number="10" class="anchored" data-anchor-id="alcance-y-limitaciones"><span class="header-section-number">10</span> Alcance y limitaciones</h2>
-<p>El proyecto se enfocará en el análisis del sombreado generado por el relieve topográfico, por lo que sus resultados constituirán una aproximación preliminar a la aptitud territorial para la instalación de parques solares fotovoltaicos. En caso de emplearse un <code>DEM</code> en lugar de un <code>DSM</code>, el modelo no representará de manera explícita obstáculos superficiales como árboles, edificaciones u otros elementos emergentes que también pueden incidir en la disponibilidad real de radiación sobre los paneles.</p>
-<p>De igual manera, la precisión de los resultados estará condicionada por la resolución espacial, la calidad y el nivel de detalle del modelo digital de elevación disponible. En consecuencia, la capacidad del análisis para representar adecuadamente variaciones locales del terreno dependerá directamente de las características del insumo topográfico empleado.</p>
+<p>El proyecto se enfocará en la ponderación conjunta de los datos base de radiación y el análisis del sombreado generado por el relieve topográfico, por lo que sus resultados constituirán una aproximación preliminar a la aptitud territorial para la instalación de parques solares fotovoltaicos. En caso de emplearse un <code>DEM</code> en lugar de un <code>DSM</code>, el modelo no representará de manera explícita obstáculos superficiales como árboles, edificaciones u otros elementos emergentes que también pueden incidir en la disponibilidad real de radiación sobre los paneles.</p>
+<p>De igual manera, la precisión de los resultados estará condicionada por la resolución espacial, la calidad y el nivel de detalle del modelo digital de elevación y las grillas climáticas disponibles. En consecuencia, la capacidad del análisis para representar adecuadamente variaciones locales del terreno dependerá directamente de las características del insumo topográfico empleado.</p>
 <p>Por tanto, el proyecto debe entenderse como una herramienta de apoyo para la preselección de áreas potencialmente aptas, y no como un sustituto de estudios detallados de ingeniería, diseño civil, diseño eléctrico o simulación energética avanzada requeridos en etapas posteriores de formulación y factibilidad de un parque solar fotovoltaico.</p>
 </section>
 <section id="referencias-preliminares" class="level2" data-number="11">
@@ -381,6 +396,9 @@ Choi, Yosoon, Jung Suh, y Seokhoon Kim. 2019. <span>«GIS-Based Solar Radiation 
 </div>
 <div id="ref-pvgismanual" class="csl-entry" role="listitem">
 European Commission, Joint Research Centre. 2024. <span>«PVGIS User Manual»</span>.
+</div>
+<div id="ref-haz2025mapping" class="csl-entry" role="listitem">
+Haz, Fahrezy Maulana, Fajrin, Dwi Arini, Ilham Armi, y Defwaldi. 2025. <span>«Mapping solar energy potential based on Google Earth Engine (GEE) in West Sumatera Province»</span>. <em>Syntax Literate: Jurnal Ilmiah Indonesia</em> 10 (5): 4952-67.
 </div>
 <div id="ref-malczewski2006gis" class="csl-entry" role="listitem">
 Malczewski, Jacek. 2006. <span>«GIS-based multicriteria decision analysis: a survey of the literature»</span>. <em>International Journal of Geographical Information Science</em> 20 (7): 703-26.
