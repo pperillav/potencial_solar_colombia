@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.550">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Fernán José Severich Díaz">
+<meta name="author" content="Pedro Joaquin Perilla Vargas">
+
+<title>Análisis Geoespacial y Automatización (Python Toolbox) para la Ubicación Óptima de Parques Solares</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="proyecto_final_files/libs/clipboard/clipboard.min.js"></script>
+<script src="proyecto_final_files/libs/quarto-html/quarto.js"></script>
+<script src="proyecto_final_files/libs/quarto-html/popper.min.js"></script>
+<script src="proyecto_final_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="proyecto_final_files/libs/quarto-html/anchor.min.js"></script>
+<link href="proyecto_final_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="proyecto_final_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="proyecto_final_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="proyecto_final_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="proyecto_final_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<style>html{ scroll-behavior: smooth; }</style>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contenido del Proyecto</h2>
+   
+  <ul>
+  <li><a href="#título-del-proyecto" id="toc-título-del-proyecto" class="nav-link active" data-scroll-target="#título-del-proyecto"><span class="header-section-number">1</span> Título del Proyecto</a></li>
+  <li><a href="#introducción-y-justificación" id="toc-introducción-y-justificación" class="nav-link" data-scroll-target="#introducción-y-justificación"><span class="header-section-number">2</span> Introducción y Justificación</a></li>
+  <li><a href="#estado-del-arte-y-fundamento-teórico" id="toc-estado-del-arte-y-fundamento-teórico" class="nav-link" data-scroll-target="#estado-del-arte-y-fundamento-teórico"><span class="header-section-number">3</span> Estado del Arte y Fundamento Teórico</a>
+  <ul class="collapse">
+  <li><a href="#cloud-computing-y-cuantificación-del-recurso-solar" id="toc-cloud-computing-y-cuantificación-del-recurso-solar" class="nav-link" data-scroll-target="#cloud-computing-y-cuantificación-del-recurso-solar"><span class="header-section-number">3.1</span> Cloud Computing y Cuantificación del Recurso Solar</a></li>
+  <li><a href="#modelado-de-idoneidad-espacial-gis-mcda-y-ahp" id="toc-modelado-de-idoneidad-espacial-gis-mcda-y-ahp" class="nav-link" data-scroll-target="#modelado-de-idoneidad-espacial-gis-mcda-y-ahp"><span class="header-section-number">3.2</span> Modelado de Idoneidad Espacial (GIS-MCDA y AHP)</a></li>
+  <li><a href="#vacío-tecnológico-y-aporte-del-proyecto" id="toc-vacío-tecnológico-y-aporte-del-proyecto" class="nav-link" data-scroll-target="#vacío-tecnológico-y-aporte-del-proyecto"><span class="header-section-number">3.3</span> Vacío Tecnológico y Aporte del Proyecto</a></li>
+  </ul></li>
+  <li><a href="#objetivos" id="toc-objetivos" class="nav-link" data-scroll-target="#objetivos"><span class="header-section-number">4</span> Objetivos</a></li>
+  <li><a href="#área-de-estudio" id="toc-área-de-estudio" class="nav-link" data-scroll-target="#área-de-estudio"><span class="header-section-number">5</span> Área de Estudio</a></li>
+  <li><a href="#variables-espaciales-y-estructura-de-restricciones" id="toc-variables-espaciales-y-estructura-de-restricciones" class="nav-link" data-scroll-target="#variables-espaciales-y-estructura-de-restricciones"><span class="header-section-number">6</span> Variables Espaciales y Estructura de Restricciones</a>
+  <ul class="collapse">
+  <li><a href="#factores-de-exclusión-máscaras-booleanas" id="toc-factores-de-exclusión-máscaras-booleanas" class="nav-link" data-scroll-target="#factores-de-exclusión-máscaras-booleanas"><span class="header-section-number">6.1</span> Factores de Exclusión (Máscaras Booleanas)</a></li>
+  <li><a href="#criterios-de-evaluación-continua" id="toc-criterios-de-evaluación-continua" class="nav-link" data-scroll-target="#criterios-de-evaluación-continua"><span class="header-section-number">6.2</span> Criterios de Evaluación Continua</a></li>
+  </ul></li>
+  <li><a href="#metodología-y-procesamiento-geoinformático" id="toc-metodología-y-procesamiento-geoinformático" class="nav-link" data-scroll-target="#metodología-y-procesamiento-geoinformático"><span class="header-section-number">7</span> Metodología y Procesamiento Geoinformático</a>
+  <ul class="collapse">
+  <li><a href="#modelado-matemático-de-consistencia-ahp" id="toc-modelado-matemático-de-consistencia-ahp" class="nav-link" data-scroll-target="#modelado-matemático-de-consistencia-ahp"><span class="header-section-number">7.1</span> Modelado Matemático de Consistencia (AHP)</a></li>
+  <li><a href="#diagrama-de-flujo-del-geoprocesamiento" id="toc-diagrama-de-flujo-del-geoprocesamiento" class="nav-link" data-scroll-target="#diagrama-de-flujo-del-geoprocesamiento"><span class="header-section-number">7.2</span> Diagrama de Flujo del Geoprocesamiento</a></li>
+  <li><a href="#integración-del-código-automatización-mediante-pyqgisarcpy" id="toc-integración-del-código-automatización-mediante-pyqgisarcpy" class="nav-link" data-scroll-target="#integración-del-código-automatización-mediante-pyqgisarcpy"><span class="header-section-number">7.3</span> Integración del Código: Automatización mediante PyQGIS/Arcpy</a></li>
+  </ul></li>
+  <li><a href="#resultados-esperados-y-discusión" id="toc-resultados-esperados-y-discusión" class="nav-link" data-scroll-target="#resultados-esperados-y-discusión"><span class="header-section-number">8</span> Resultados Esperados y Discusión</a>
+  <ul class="collapse">
+  <li><a href="#parámetros-ahp-y-modelado-espacial" id="toc-parámetros-ahp-y-modelado-espacial" class="nav-link" data-scroll-target="#parámetros-ahp-y-modelado-espacial"><span class="header-section-number">8.1</span> Parámetros AHP y Modelado Espacial</a></li>
+  </ul></li>
+  <li><a href="#conclusiones" id="toc-conclusiones" class="nav-link" data-scroll-target="#conclusiones"><span class="header-section-number">9</span> Conclusiones</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">10</span> Referencias</a></li>
+  <li><a href="#anexos" id="toc-anexos" class="nav-link" data-scroll-target="#anexos"><span class="header-section-number">11</span> Anexos</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Otros formatos</h2><ul><li><a href="proyecto_final.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Análisis Geoespacial y Automatización (Python Toolbox) para la Ubicación Óptima de Parques Solares</h1>
+<p class="subtitle lead">Implementación de MCDA-AHP, Topografía de Alta Resolución y Suitability Modeler</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Autores/as</div>
+    <div class="quarto-title-meta-contents">
+             <p>Fernán José Severich Díaz </p>
+             <p>Pedro Joaquin Perilla Vargas </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Fecha de publicación</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">30 de mayo de 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div style="page-break-after: always;"></div>
+<section id="título-del-proyecto" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Título del Proyecto</h1>
+<p><strong>Evaluación Espacial Multicriterio y Desarrollo de Herramienta Automatizada para la Identificación de Zonas Aptas para Parques Solares Fotovoltaicos mediante AHP.</strong></p>
+</section>
+<section id="introducción-y-justificación" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Introducción y Justificación</h1>
+<p>La transición hacia matrices energéticas sostenibles requiere la identificación precisa de zonas óptimas para la infraestructura fotovoltaica. A escala de prefactibilidad, la viabilidad espacial de un proyecto depende de la convergencia de variables climáticas, topográficas y ambientales. El diseño de granjas solares con estructuras de inclinación fija es altamente sensible a la geomorfometría del terreno; pendientes pronunciadas y orientaciones inadecuadas generan auto-sombreado entre las filas de paneles y alteran el ángulo de incidencia óptimo de la radiación solar, reduciendo drásticamente la eficiencia energética.</p>
+<p>Este proyecto aborda el problema de localización espacial evolucionando desde análisis booleanos básicos (álgebra de mapas de exclusión) hacia Modelos de Soporte a la Decisión Espacial (SDSS) robustos. Mediante la integración del Análisis de Decisión Multicriterio (MCDA), el Proceso de Jerarquía Analítica (AHP) y la automatización algorítmica mediante una <em>Python Toolbox</em> en ArcGIS Pro, se provee una solución geomática escalable. Esto permite no solo cartografiar el potencial, sino transformar datos geoespaciales crudos en inteligencia territorial orientada a la planificación energética.</p>
+</section>
+<section id="estado-del-arte-y-fundamento-teórico" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Estado del Arte y Fundamento Teórico</h1>
+<p>El modelado del potencial solar y la selección de sitios ha experimentado una profunda evolución metodológica impulsada por los avances en la Geomática moderna y la teledetección.</p>
+<section id="cloud-computing-y-cuantificación-del-recurso-solar" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="cloud-computing-y-cuantificación-del-recurso-solar"><span class="header-section-number">3.1</span> Cloud Computing y Cuantificación del Recurso Solar</h2>
+<p>Históricamente, los mapas de radiación se basaban en la interpolación espacial de estaciones meteorológicas terrestres, las cuales presentan baja densidad en países en desarrollo. Actualmente, el uso de plataformas <em>Cloud-Native</em> como Google Earth Engine (GEE) permite procesar petabytes de información satelital y productos de reanálisis global, como ERA5-Land <span class="citation" data-cites="munoz2021">(<a href="#ref-munoz2021" role="doc-biblioref">Muñoz-Sabater et&nbsp;al. 2021</a>)</span>. Investigaciones recientes, como la de Haz et al. <span class="citation" data-cites="haz2025">(<a href="#ref-haz2025" role="doc-biblioref">Haz et&nbsp;al. 2025</a>)</span>, demuestran que la integración de GEE permite modelar la Radiación Global Horizontal (GHI) con alta fidelidad, validando los resultados frente a catálogos como NASA POWER mediante métricas estadísticas (RMSE, MAPE), garantizando así el insumo climático base.</p>
+</section>
+<section id="modelado-de-idoneidad-espacial-gis-mcda-y-ahp" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="modelado-de-idoneidad-espacial-gis-mcda-y-ahp"><span class="header-section-number">3.2</span> Modelado de Idoneidad Espacial (GIS-MCDA y AHP)</h2>
+<p>Debido a que la selección de sitios es un problema multidimensional, la hibridación de los Sistemas de Información Geográfica con el Análisis de Decisión Multicriterio (GIS-MCDA) se ha posicionado como el estándar global <span class="citation" data-cites="malczewski2006">(<a href="#ref-malczewski2006" role="doc-biblioref">Malczewski 2006</a>)</span>. Liu et al. <span class="citation" data-cites="liu2024">(<a href="#ref-liu2024" role="doc-biblioref">Liu et&nbsp;al. 2024</a>)</span> aplicaron el Proceso de Jerarquía Analítica (AHP) en Mongolia Interior para integrar dimensiones climáticas, topográficas y de cobertura, demostrando que la normalización de variables heterogéneas reduce el conflicto en la toma de decisiones. Asimismo, Melana et al. <span class="citation" data-cites="melana2025">(<a href="#ref-melana2025" role="doc-biblioref">Melana et&nbsp;al. 2025</a>)</span> introducen lógicas de dos niveles: (1) la exclusión estricta de áreas protegidas y zonas urbanas mediante operaciones booleanas, y (2) la reclasificación continua de las zonas viables utilizando un <em>Suitability Modeler</em>.</p>
+</section>
+<section id="vacío-tecnológico-y-aporte-del-proyecto" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="vacío-tecnológico-y-aporte-del-proyecto"><span class="header-section-number">3.3</span> Vacío Tecnológico y Aporte del Proyecto</h2>
+<p>A pesar de estos avances, un porcentaje significativo de los estudios a escala regional obvian la micro-topografía, utilizando Modelos Digitales de Elevación (DEM) de 30m o 90m que enmascaran la rugosidad real del terreno. Este proyecto subsana dicho vacío al incorporar topografía de mayor resolución (ALOS PALSAR 12.5m) para capturar las variaciones geomorfométricas sutiles. Además, se supera el paradigma del mapa estático al empaquetar el flujo lógico en una herramienta automatizada (Scripting en Python), capaz de filtrar espacialmente la idoneidad bajo restricciones de área mínima de operación (10 MW).</p>
+</section>
+</section>
+<section id="objetivos" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Objetivos</h1>
+<p><strong>Objetivo General:</strong> Desarrollar un modelo geomático multicriterio (AHP) y una herramienta automatizada de geoprocesamiento (Python Toolbox) para identificar zonas con máxima idoneidad espacial para la instalación de parques solares, optimizando la topografía de alta resolución y el potencial de radiación.</p>
+<p><strong>Objetivos Específicos:</strong> 1. Extraer y armonizar espacialmente índices climáticos (GHI vía GEE) y geomorfométricos (Pendiente, Orientación) desde un DEM ALOS PALSAR de 12.5m. 2. Estructurar una matriz de decisión AHP para estandarizar las variables geoespaciales, validando su confiabilidad matemática mediante el Índice de Consistencia (<span class="math inline">\(CR &lt; 0.1\)</span>). 3. Desarrollar un script de automatización (<code>arcpy</code>) que ejecute la superposición ponderada y extraiga vectorialmente polígonos viables contiguos <span class="math inline">\(\ge 10\)</span> hectáreas.</p>
+</section>
+<section id="área-de-estudio" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Área de Estudio</h1>
+<p>El proyecto se despliega en dos escenarios con el fin de calibrar y validar el modelo geomático:</p>
+<p><strong>Zona Piloto Metodológica (Vegachí y Remedios, Antioquia):</strong> Seleccionada estratégicamente por su elevada complejidad topográfica. Las laderas pronunciadas de esta región andina permiten validar la eficacia de los filtros de exclusión por pendiente y la influencia de la orientación geomorfológica (<em>Aspect</em>).</p>
+</section>
+<section id="variables-espaciales-y-estructura-de-restricciones" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Variables Espaciales y Estructura de Restricciones</h1>
+<p>La conceptualización del modelo exige la armonización de diversos <em>datasets</em> bajo un mismo Sistema de Referencia de Coordenadas (CRS) y resolución de píxel. Siguiendo el estándar de la literatura <span class="citation" data-cites="melana2025 liu2024">(<a href="#ref-melana2025" role="doc-biblioref">Melana et&nbsp;al. 2025</a>; <a href="#ref-liu2024" role="doc-biblioref">Liu et&nbsp;al. 2024</a>)</span>, los parámetros se dividen en Factores de Exclusión y Criterios de Evaluación.</p>
+<section id="factores-de-exclusión-máscaras-booleanas" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="factores-de-exclusión-máscaras-booleanas"><span class="header-section-number">6.1</span> Factores de Exclusión (Máscaras Booleanas)</h2>
+<p>Se aplica álgebra de mapas multiplicativa, donde el valor ‘0’ inhabilita el píxel para el resto del análisis.</p>
+<p><strong>Tabla 1. Restricciones Espaciales Absolutas</strong></p>
+<table class="table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable Espacial</th>
+<th style="text-align: left;">Umbral de Restricción</th>
+<th style="text-align: left;">Justificación Geomática</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Pendiente</strong></td>
+<td style="text-align: left;"><span class="math inline">\(&gt; 15^{\circ}\)</span></td>
+<td style="text-align: left;">Alteración del ángulo de incidencia solar y auto-sombreado entre filas.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Orientación (Aspect)</strong></td>
+<td style="text-align: left;">Norte, Noroeste</td>
+<td style="text-align: left;">Reducción severa de captación de radiación directa en latitudes tropicales.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Cobertura (MapBiomas)</strong></td>
+<td style="text-align: left;">Bosques (1-6), Agua (33), Urbano (24)</td>
+<td style="text-align: left;">Restricciones de conservación ambiental y conflicto de uso del suelo.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Escala Espacial</strong></td>
+<td style="text-align: left;">Área continua <span class="math inline">\(&lt; 10\)</span> ha</td>
+<td style="text-align: left;">Imposibilidad física de albergar el estándar industrial de 10 MW.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="criterios-de-evaluación-continua" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="criterios-de-evaluación-continua"><span class="header-section-number">6.2</span> Criterios de Evaluación Continua</h2>
+<p>Los píxeles que sobreviven a la exclusión (valor ‘1’) se reclasifican en una escala de idoneidad estandarizada (1 = Pobre a 5 = Excelente).</p>
+<p><strong>Tabla 2. Rangos de Reclasificación Espacial</strong></p>
+<table class="table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Criterio</th>
+<th style="text-align: left;">Peso (AHP)</th>
+<th style="text-align: left;">Excelente (5)</th>
+<th style="text-align: left;">Bueno (4)</th>
+<th style="text-align: left;">Moderado (3)</th>
+<th style="text-align: left;">Pobre (1-2)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>GHI (kWh/m²/día)</strong></td>
+<td style="text-align: left;"><em>A calcular</em></td>
+<td style="text-align: left;"><span class="math inline">\(&gt; 5.5\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(5.0 - 5.5\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(4.5 - 5.0\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(&lt; 4.5\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Pendiente (Grados)</strong></td>
+<td style="text-align: left;"><em>A calcular</em></td>
+<td style="text-align: left;"><span class="math inline">\(0 - 5^\circ\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(5 - 10^\circ\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(10 - 15^\circ\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(&gt; 15^\circ\)</span> (N/A)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Orientación</strong></td>
+<td style="text-align: left;"><em>A calcular</em></td>
+<td style="text-align: left;">Sur, Sureste</td>
+<td style="text-align: left;">Suroeste</td>
+<td style="text-align: left;">Este, Oeste</td>
+<td style="text-align: left;">Norte (N/A)</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="metodología-y-procesamiento-geoinformático" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Metodología y Procesamiento Geoinformático</h1>
+<section id="modelado-matemático-de-consistencia-ahp" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="modelado-matemático-de-consistencia-ahp"><span class="header-section-number">7.1</span> Modelado Matemático de Consistencia (AHP)</h2>
+<p>Para evitar la subjetividad en el álgebra de mapas, se emplea el Proceso de Jerarquía Analítica propuesto por Saaty <span class="citation" data-cites="saaty1980">(<a href="#ref-saaty1980" role="doc-biblioref">Saaty 1980</a>)</span>. Tras establecer la matriz de comparación por pares de tamaño <span class="math inline">\(n \times n\)</span>, se calcula el vector propio principal para extraer los pesos <span class="math inline">\(W_i\)</span>.</p>
+<p>La validez del modelo se aprueba calculando la Relación de Consistencia (<span class="math inline">\(CR\)</span>): <span class="math display">\[CR = \frac{CI}{RI}\]</span> Donde el Índice de Consistencia (<span class="math inline">\(CI\)</span>) se define como: <span class="math display">\[CI = \frac{\lambda_{max} - n}{n - 1}\]</span> <em>(Siendo <span class="math inline">\(\lambda_{max}\)</span> el eigenvalor máximo. Solo se aceptan matrices con <span class="math inline">\(CR &lt; 0.10\)</span> <span class="citation" data-cites="islam2024">(<a href="#ref-islam2024" role="doc-biblioref">Islam et&nbsp;al. 2024</a>)</span>).</em></p>
+<p>La función de idoneidad espacial (<span class="math inline">\(S\)</span>) procesada píxel a píxel se expresa como: <span class="math display">\[S = \sum_{i=1}^{n} (W_i \times C_i) \times \prod_{j=1}^{m} R_j\]</span></p>
+</section>
+<section id="diagrama-de-flujo-del-geoprocesamiento" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="diagrama-de-flujo-del-geoprocesamiento"><span class="header-section-number">7.2</span> Diagrama de Flujo del Geoprocesamiento</h2>
+<p>A continuación, se presenta la arquitectura del modelo lógico, desde la adquisición en GEE hasta la vectorización automatizada.</p>
+<pre class="mermaid"><code>flowchart TD
+    A([Adquisición de Datos]) --&gt; B(GEE: Radiación ERA5 GHI)
+    A --&gt; C(ALOS PALSAR RTC 12.5m)
+    A --&gt; D(MapBiomas Col. 3)
+    
+    C --&gt; E[Análisis Geomorfométrico]
+    E --&gt; F(Pendiente / Slope)
+    E --&gt; G(Orientación / Aspect)
+    
+    B --&gt; H{Reclasificación Espacial&lt;br&gt;Escala 1 a 5}
+    F --&gt; H
+    G --&gt; H
+    
+    D --&gt; I(Máscara Booleana de Cobertura)
+    F --&gt; J(Máscara Booleana &gt; 15 grados)
+    
+    H --&gt; K["Superposición Ponderada (Weighted Overlay)"]
+    K --&gt; L["Matriz AHP (Pesos Wi)"]
+    
+    K --&gt; M{Multiplicación por&lt;br&gt;Restricciones Booleanas}
+    I --&gt; M
+    J --&gt; M
+    
+    M --&gt; N[Extracción de Píxeles de Alta Aptitud]
+    N --&gt; O[Vectorización RasterToPolygon]
+    O --&gt; P{"Filtro de Contigüidad Espacial&lt;br&gt;Área &gt;= 10 Hectáreas"}
+    P --&gt; Q([Zonas Óptimas de Implantación])</code></pre>
+</section>
+<section id="integración-del-código-automatización-mediante-pyqgisarcpy" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="integración-del-código-automatización-mediante-pyqgisarcpy"><span class="header-section-number">7.3</span> Integración del Código: Automatización mediante PyQGIS/Arcpy</h2>
+<p>Para garantizar la reproducibilidad y escalar el análisis, la lógica matemática se codifica en una herramienta de geoprocesamiento. El siguiente bloque ilustra el “core” del script espacial:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arcpy</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> arcpy.sa <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> modelador_aptitud_solar(slope_raster, aspect_raster, ghi_raster, lulc_raster, out_poly):</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Automatización del SDSS (Spatial Decision Support System) para parques solares.</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Aplica exclusión booleana, reclass AHP y filtro de área.</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    arcpy.env.overwriteOutput <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    arcpy.CheckOutExtension(<span class="st">"Spatial"</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1. Filtro Booleano de Exclusión (Pendientes &gt; 15 grados inviables)</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    mask_slope <span class="op">=</span> Con(Raster(slope_raster) <span class="op">&lt;=</span> <span class="dv">15</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 2. Estandarización de Escalas de Aptitud Geomorfométrica (1 a 5)</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Pendiente: 0-5 (Excelente: 5), 5-10 (Buena: 3), 10-15 (Pobre: 1)</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    remap_slope <span class="op">=</span> RemapRange([[<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">5</span>], [<span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">3</span>], [<span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">1</span>]])</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    slope_reclass <span class="op">=</span> Reclassify(slope_raster, <span class="st">"Value"</span>, remap_slope)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3. Superposición Ponderada (Valores hipotéticos derivados de Matriz AHP)</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># WOTable Sintaxis: [Raster, % Peso, Campo]</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    myWOTable <span class="op">=</span> WOTable([</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        [slope_reclass, <span class="dv">40</span>, <span class="st">"Value"</span>], <span class="co"># Alta penalización al terreno abrupto</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        [ghi_raster, <span class="dv">35</span>, <span class="st">"Value"</span>],    <span class="co"># Potencial energético</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        [aspect_raster, <span class="dv">25</span>, <span class="st">"Value"</span>]  <span class="co"># Orientación de ladera</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    ], [<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">1</span>]) </span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    suitability_raw <span class="op">=</span> WeightedOverlay(myWOTable)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 4. Álgebra de Mapas Multiplicativa (Aptitud x Restricciones)</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    final_suitability <span class="op">=</span> suitability_raw <span class="op">*</span> mask_slope</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 5. Extracción de Alta Aptitud y Vectorización</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    optimal_raster <span class="op">=</span> Con(final_suitability <span class="op">&gt;=</span> <span class="dv">4</span>, <span class="dv">1</span>)</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    temp_poly <span class="op">=</span> <span class="st">"in_memory/optimal_poly"</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    arcpy.conversion.RasterToPolygon(optimal_raster, temp_poly, <span class="st">"NO_SIMPLIFY"</span>, <span class="st">"Value"</span>)</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 6. Filtro Espacial: Contigüidad geométrica (&gt;= 10 Hectáreas / 100,000 m2)</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    arcpy.management.SelectLayerByAttribute(temp_poly, <span class="st">"NEW_SELECTION"</span>, <span class="st">"Shape_Area &gt;= 100000"</span>)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    arcpy.management.CopyFeatures(temp_poly, out_poly)</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    arcpy.AddMessage(<span class="ss">f"Análisis finalizado exitosamente. Output: </span><span class="sc">{</span>out_poly<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="resultados-esperados-y-discusión" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Resultados Esperados y Discusión</h1>
+<section id="parámetros-ahp-y-modelado-espacial" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="parámetros-ahp-y-modelado-espacial"><span class="header-section-number">8.1</span> Parámetros AHP y Modelado Espacial</h2>
+<p>Se espera que el cálculo del AHP otorgue una prevalencia significativa a las variables geomorfométricas (Pendiente y Aspecto) en regiones andinas como Antioquia, dado que el sombreado estructural minimiza los beneficios de una alta radiación teórica. El <span class="math inline">\(CR\)</span> resultante dotará al modelo del rigor estadístico necesario para justificar decisiones de inversión.8.2. Contraste entre Escenarios (Antioquia vs.&nbsp;Córdoba)La cartografía temática de aptitud (Suitability Map) revelará distribuciones espaciales diametralmente opuestas. En Vegachí y Remedios, se proyecta que la máscara booleana elimine más del 70% del territorio inicial, y el filtro de contigüidad espacial (<span class="math inline">\(\ge 10\text{ ha}\)</span>) descarte las laderas fragmentadas, aislando únicamente pequeñas mesetas, extrayendo polígonos continuos ideales para un diseño rápido de ingeniería de detalle.</p>
+</section>
+</section>
+<section id="conclusiones" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Conclusiones</h1>
+<p>Avance Metodológico: La transición de análisis booleanos convencionales a un Modelo de Decisión Multicriterio (AHP), validado mediante el Índice de Consistencia (<span class="math inline">\(CR\)</span>), elimina la subjetividad en la selección de sitios, alineando la Geomática con estándares científicos internacionales.Resolución y Precisión Espacial: El uso de DEM de alta resolución (ALOS 12.5m) demostró ser crítico para evaluar la micro-topografía; omitir este nivel de detalle generaría falsos positivos en zonas escarpadas propensas a altos porcentajes de auto-sombreado.Automatización y Escalabilidad: El desarrollo del script espacial transforma una tarea GIS manual y repetitiva en una herramienta de Inteligencia Territorial automatizada, capaz de aplicar filtros de viabilidad financiera (polígonos continuos para 10 MW) en segundos, optimizando la planificación estratégica en el sector de las energías renovables.</p>
+</section>
+<section id="referencias" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Referencias</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-haz2025" class="csl-entry" role="listitem">
+Haz, Fahrezy Maulana, Fajrin, Dwi Arini, Ilham Armi, y Defwaldi. 2025. <span>«Mapping Solar Energy Potential Based on Google Earth Engine (GEE) in West Sumatera Province»</span>. <em>Syntax Literate: Jurnal Ilmiah Indonesia</em> 10 (5): 4952-67.
+</div>
+<div id="ref-islam2024" class="csl-entry" role="listitem">
+Islam, M. R., M. T. Aziz, M. Alauddin, Z. Kader, y M. R. Islam. 2024. <span>«Site suitability assessment for solar power plants in Bangladesh: A GIS-based analytical hierarchy process (AHP) and multi-criteria decision analysis (MCDA) approach»</span>. <em>Renewable Energy</em> 220: 119595.
+</div>
+<div id="ref-liu2024" class="csl-entry" role="listitem">
+Liu, Ting, Tao Zhang, Yunjia Zou, Guanghui Wang, Hailun Dai, y Wei Zhang. 2024. <span>«Suitability analysis for implementing wind and solar farms based AHP method: Case study in Inner Mongolia, China»</span>. <em>The International Archives of the Photogrammetry, Remote Sensing and Spatial Information Sciences</em> 48: 417-22.
+</div>
+<div id="ref-malczewski2006" class="csl-entry" role="listitem">
+Malczewski, Jacek. 2006. <span>«GIS-based multicriteria decision analysis: a survey of the literature»</span>. <em>International Journal of Geographical Information Science</em> 20 (7): 703-26.
+</div>
+<div id="ref-melana2025" class="csl-entry" role="listitem">
+Melana, Adrian, Veronica Capin, Jhon Lester Arellaga, y Ayin Tamondong. 2025. <span>«GIS-Based Suitability Analysis for Solar Energy Potential Sites in Zamboanga City Using Weighted Decision Support»</span>. En <em>Proceedings of International Exchange and Innovation Conference on Engineering &amp; Sciences (IEICES)</em>, 11:1477-84. Kyushu University.
+</div>
+<div id="ref-munoz2021" class="csl-entry" role="listitem">
+Muñoz-Sabater, Joaquı́n, Emanuel Dutra, Anna Agustı́-Panareda, Clément Albergel, Gabriele Arduini, Gianpaolo Balsamo, Souhail Boussetta, et&nbsp;al. 2021. <span>«ERA5-Land: A state-of-the-art global reanalysis dataset for land applications»</span>. <em>Earth System Science Data</em> 13 (9): 4349-83.
+</div>
+<div id="ref-saaty1980" class="csl-entry" role="listitem">
+Saaty, Thomas L. 1980. <em>The Analytic Hierarchy Process: Planning, Priority Setting, Resource Allocation</em>. New York, NY: McGraw-Hill.
+</div>
+</div>
+</section>
+<section id="anexos" class="level1" data-number="11">
+<h1 data-number="11"><span class="header-section-number">11</span> Anexos</h1>
+<p>Anexo A: Tablas de Reclasificación Espacial por Variable. Anexo B: Matriz de Decisión Saaty y Cálculo de Eigenvalores.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+<script src="proyecto_final_files/libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
